@@ -12,71 +12,18 @@ namespace Tomokin
 
         public static int Turns;
         public static int Stages;
-
-        public GameObject OtherPlayerMsg;   //其他玩家的信息
-        public GameObject Player;           //本玩家
-        public GameObject PlayerR;          //红色玩家
-        public GameObject PlayerB;          //蓝色玩家
-        private ActionData A_Data;          //本玩家的行为信息
-        public GameObject MessageLabel;     //本玩家的信息栏
-        public static string PlayerName;
-        public HandCardsManager HCM;
+        public static string PlayerName;                            //本玩家姓名
+        public HandCardsManager HCM;                                //本玩家的手牌管理器
+        public static PlayerGameData PD;
 
         public List<CardData> CardsInLibarary;                      //牌库中的卡牌
-        private List<GameObject> UIs = new List<GameObject>();      //协议书和手牌的UI
-        public List<GameObject> CardsInBook;                        //协议书UI
-        private GameObject[] LockBook = new GameObject[2];
-        public List<GameObject> CardsInHand;                        //手牌UI
+        private List<GameObject> UIs = new List<GameObject>();      //协议书和手牌的UI（按钮）
+        public List<GameObject> CardsInBook;                        //协议书UI（按钮）
+        private GameObject[] LockBook = new GameObject[2];          //被锁定的协议书槽
+        public List<GameObject> CardsInHand;                        //手牌UI（按钮）
         private bool isNotNull = false;                             //标记，是否点击空白
-        public CardMsg[] CM;
-        private List<CardData> UnableCards = null;
-        //public Text OutPut;
-
-        void ShowPlayerMsg()
-        {
-            Text txt = MessageLabel.GetComponentInChildren<Text>();
-            txt.text = string.Format("钱袋 = {0}" +
-                "\n筹码 = {1}" +
-                "\n选票 = {2}",
-                A_Data.P_Data.GetMoney, A_Data.P_Data.GetChip, A_Data.P_Data.GetVote);
-            if (A_Data.GetBeBribed != null)
-            {
-                txt.text += string.Format("\n被{0}贿赂", A_Data.GetBeBribed.name);
-            }
-        }
-
-        /// <summary>
-        /// 贿赂（按钮）
-        /// </summary>
-        public void Bribed()
-        {
-            GameObject obj = EnemyEvent.SelectedObj;
-            if (A_Data.P_Data.GetMoney > 1)
-            {
-                A_Data.P_Data.GetMoney = -2;
-                obj.GetComponent<ActionData>().GetBeBribed = Player;
-                obj.GetComponent<ActionData>().P_Data.GetMoney = 2;
-            }
-
-            obj.GetComponent<EnemyEvent>().ShowMsg();
-        }
-        /// <summary>
-        /// 投票（按钮）
-        /// </summary>
-        public void Vote()
-        {
-            GameObject obj = EnemyEvent.SelectedObj;
-            if (A_Data.P_Data.GetVote > 0)
-            {
-                A_Data.P_Data.GetVote = -1;
-                obj.GetComponent<ActionData>().VoteNumofProposal++;
-            }
-            else if (A_Data.P_Data.GetExVote > 0)
-            {
-                A_Data.P_Data.GetExVote = -1;
-                obj.GetComponent<ActionData>().VoteNumofProposal += 1.5f;
-            }
-        }
+        public CardMsg[] CM;                                        //所有的卡牌信息类
+        public Text OutPut;                                         //打印提案显示
 
         /// <summary>
         /// 显示更换或删除卡牌的UI
@@ -110,6 +57,13 @@ namespace Tomokin
             }
         }
 
+        #region 拉拢模块
+
+
+
+        #endregion
+
+        #region 换牌模块
         /// <summary>
         /// 随机获得一个卡牌的属性
         /// </summary>
@@ -145,7 +99,7 @@ namespace Tomokin
         /// 将手牌和协议书设置为不可获取
         /// </summary>
         /// <param name="hm"></param>
-        public void RefreshLib(HandCardsManager hm)
+        public void RefreshLib()
         {
             foreach (var cil in CardsInLibarary)
             {
@@ -167,7 +121,7 @@ namespace Tomokin
             int value = hm.drop.value;
             int[] ploy = new int[] { -1, -1, -1, -1, -1 };
 
-            RefreshLib(hm);
+            RefreshLib();
 
             //选择策略
             switch (value)
@@ -187,7 +141,7 @@ namespace Tomokin
             for (int i = 0; i < hm.Cards.Count; i++)
             {
                 GameObject h = hm.Cards[i];
-                CardData nCard = null;
+                CardData nCard;
                 if (ploy[i] != -1)
                     nCard = RollCard(ploy[i]);
                 else
@@ -210,16 +164,20 @@ namespace Tomokin
             Debug.Log("Rol Card");
             RollCards(HCM);
         }
+        #endregion
 
+        /// <summary>
+        /// 打印提案
+        /// </summary>
+        public void Agree()
+        {
+            string str = ProposalManager.PrintProp();
+            ProposalManager.AgreeProp();
+            if (OutPut != null)
+                OutPut.text += str;
+        }
 
-        //public void Agree()
-        //{
-        //    string str = ProposalManager.PrintProp();
-        //    ProposalManager.AgreeProp();
-        //    OutPut.text += str;
-        //}
-
-        public void guiLing()
+        public void GuiLing()
         {
             foreach (CardMsg cm in CM)
             {
@@ -230,26 +188,6 @@ namespace Tomokin
             {
                 cil.Get_IsInLib = true;
             }
-        }
-
-
-        //只计算自己的分数
-        public void SettleCore()
-        {
-            CardData cd;
-            foreach (var cib in CardsInBook)
-            {
-                GameObject CIB = cib.transform.parent.gameObject;
-                if (CIB.activeSelf)
-                {
-                    cd = CIB.GetComponent<CardMsg>().card;
-                    A_Data.P_Data.GetMoney = cd.Get_G;
-                    PlayerR.GetComponent<ActionData>().P_Data.GetMoney = cd.Get_R;
-                    PlayerB.GetComponent<ActionData>().P_Data.GetMoney = cd.Get_B;
-                    //性格的加成
-                }
-            }
-            EnemyEvent.SelectedObj.gameObject.GetComponent<EnemyEvent>().ShowMsg();
         }
 
         //统计票数
@@ -263,11 +201,13 @@ namespace Tomokin
         void Start()
         {
             Instance = this;
+            //订阅
             FindObjectOfType<PrepareStateEvent>().onRollCard += Roll;
-            //LockBook = new GameObject[2]{ CardsInBook[4], CardsInBook[5]};
+            //锁定协议书槽
+            if (CardsInBook.Count > 5)
+                LockBook = new GameObject[2] { CardsInBook[4], CardsInBook[5] };
 
             //UI初始化
-            //OtherPlayerMsg.SetActive(false);//用于SimpleScene
             UIs.AddRange(CardsInBook);
             UIs.AddRange(CardsInHand);
             foreach (GameObject item in UIs)
@@ -275,6 +215,7 @@ namespace Tomokin
                 item.SetActive(false);
                 //item.transform.parent.gameObject.SetActive(false);
             }
+            //卡牌初始化
             int order = 0;
             foreach (CardData cil in CardsInLibarary)
             {

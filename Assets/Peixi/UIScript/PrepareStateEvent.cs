@@ -117,6 +117,7 @@ namespace Peixi
             print("confirm bribe button press");
             inquireBribeFrame.SetActive(false);
             bribeButton.SetActive(true);
+            //调用贿赂的底层逻辑（需要知道被贿赂的对象）
         }
 
         public void OnCancelBribeButtonPressed()

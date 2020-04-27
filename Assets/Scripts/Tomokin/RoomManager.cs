@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using C;
+using Peixi;
+
 namespace Tomokin
 {
     public class RoomManager : MonoBehaviour
     {
-        public GameObject[] PlayerMsg;
-        public GameObject GameScene;
+        public GameObject[] PlayerMsg;      //显示玩家信息的面板
+        public GameObject[] GameScenes;     //游戏的UI
 
         public static PlayerGameData[] PD = new PlayerGameData[3];
 
@@ -57,7 +59,11 @@ namespace Tomokin
             if (!IsReady) return;
             //判断所有玩家都准备了
             this.gameObject.SetActive(false);
-            GameScene.SetActive(true);
+            foreach (var scene in GameScenes)
+            {
+                scene.SetActive(true);
+            }
+            GameStartInit(TomokinNet.PlayersInRoom, true);
         }
         
         public void GameStartInit(List<string> names, bool ishouseowner)
@@ -67,9 +73,10 @@ namespace Tomokin
             {
                 PD[i] = new PlayerGameData(name, i, ishouseowner);
             }
+            GameManager.
 
             //进入准备阶段
-
+            FindObjectOfType<PrepareStateEvent>().RoundStartInvoke();
         }
     }
 }

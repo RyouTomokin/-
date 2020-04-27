@@ -7,20 +7,19 @@ namespace Tomokin
 {
     public class LoginManager : MonoBehaviour
     {
-        //denglu
+        //登录UI
         public GameObject login_root;
-
         public InputField PlayerName;
-        public static string Name;
 
+        public static string Name;              //玩家姓名+ID
 
-        //fangj
+        //房间列表UI
         public GameObject room_root;
         public Text room_text;
         public InputField room_input_filed;
-        //room
+
+        //等待房间UI
         public GameObject RoomScene;
-        public GameObject Player;
 
         public void Login()
         {
