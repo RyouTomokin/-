@@ -71,9 +71,11 @@ namespace Tomokin
             //生成3个玩家的数据类
             for (int i = 0; i < names.Count; i++)
             {
-                PD[i] = new PlayerGameData(name, i, ishouseowner);
+                PD[i] = new PlayerGameData(names[i], i, ishouseowner);
+                if (names[i] == GameManager.PlayerName)
+                    GameManager.PD = PD[i];
             }
-            GameManager.
+            
 
             //进入准备阶段
             FindObjectOfType<PrepareStateEvent>().RoundStartInvoke();

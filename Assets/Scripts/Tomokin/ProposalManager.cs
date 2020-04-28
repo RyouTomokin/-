@@ -7,14 +7,12 @@ namespace Tomokin
     public class ProposalManager
     {
         public static List<Proposal> Props_List = new List<Proposal>();
+        public static List<Proposal> PropsofthisTurn;   //接收这个回合的所有提案
         private static Proposal TempProp;
-
-        
-
-        public static void AddProp(GameObject hand, GameObject book)
+        public static void AddProp(GameObject hand, int book)
         {
             TempProp = new Proposal(hand, book);
-            Props_List.Add(TempProp);
+            //Props_List.Add(TempProp);             //应当把这个回合的提案一起添加
         }
 
         public static void AgreeProp(Proposal prop)
@@ -30,10 +28,34 @@ namespace Tomokin
                 HM.Add_Book(prop.InHand);
             }
         }
+        #region
+        //服务器生成提案列表（顺序为玩家的积分升序排列）
+        //投票结果
+        #endregion
 
         public static void AgreeProp()
         {
             AgreeProp(Props_List[Props_List.Count - 1]);
+        }
+        //判断某个提案是否有效
+        public static bool IsValid(Proposal prop)
+        {
+            if (prop.InHand == null)
+            {
+                if (BookManager.GetBookByNum(prop.InBook).GetComponent<CardMsg>().card == prop.BookCard)
+                    return true;
+                else return false;
+            }
+            else if (prop.InBook == -1)
+            {
+                //如果协议书满了，返回false
+                //if()
+                return true;
+            }
+            else
+            {
+                return true;
+            }
         }
 
         public static string PrintProp()
@@ -45,7 +67,7 @@ namespace Tomokin
                 int id = prop.BookCard.Get_Order;
                 msg += string.Format("删除协议书#{0}\n", id);
             }
-            else if (prop.InBook == null)
+            else if (prop.InBook == -1)
             {
                 int id = prop.HandCard.Get_Order;
                 msg += string.Format("添加手牌#{0}到协议书\n", id);
@@ -62,17 +84,19 @@ namespace Tomokin
     public class Proposal
     {
         public GameObject InHand;
-        public GameObject InBook;
+        public int InBook;
         public CardData HandCard;
         public CardData BookCard;
-        //卡牌本身信息；是否通过；回合数
+        public PlayerGameData Player;
+        //是否通过;回合数
 
-        public Proposal(GameObject h, GameObject b)
+        public Proposal(GameObject h, int b)
         {
             InHand = h;
             InBook = b;
             if (h != null) HandCard = h.GetComponent<CardMsg>().card;
-            if (b != null) BookCard = b.GetComponent<CardMsg>().card;
+            if (b != -1) BookCard = BookManager.GetBookByNum(b).GetComponent<CardMsg>().card;
+            Player = GameManager.PD;
         }
     }
 }

@@ -22,7 +22,7 @@ namespace Tomokin
 
         public void Add_Book_Prop(GameObject hand)
         {
-            ProposalManager.AddProp(hand, null);
+            ProposalManager.AddProp(hand, -1);
         }
 
         /// <summary>

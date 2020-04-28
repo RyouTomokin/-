@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 namespace Tomokin
 {
@@ -11,10 +12,54 @@ namespace Tomokin
         public GameManager GM;
         public bool isReplace = false;      //替换模式
         public GameObject Bereplace;        //被替换的卡牌对象
+        public int Bereplace_int;
+        public static GameObject[] Books;
+        public static List<GameObject> UnlockedBooks;
 
         public void Add_Book_Prop(GameObject book)
         {
-            ProposalManager.AddProp(null, book);
+            for (int i = 0; i < 6; i++)
+            {
+                if (book == Books[i])
+                    ProposalManager.AddProp(null, i);
+            }
+        }
+        //通过协议书槽的序号找到协议书
+        public static GameObject GetBookByNum(int n)
+        {
+            if (n < Books.Length)
+                return Books[n];
+            else return null;
+        }
+
+        public static int GetNumByBook(GameObject o)
+        {
+            for (int i = 0; i < Books.Length; i++)
+            {
+                if (o == Books[i]) return i;
+            }
+            return -1;
+        }
+        //判断是否所有协议书都被使用了
+        public static bool IsBookFull()
+        {
+            foreach (var b in UnlockedBooks)
+            {
+                if (!b.activeSelf) return true;
+            }
+            return false;
+        }
+
+        public static void LockChange()
+        {
+            if (Books.Length == 6)
+            {
+                UnlockedBooks.Clear();
+                for (int i = 2; i < 6; i++)
+                {
+                    UnlockedBooks.Add(Books[i]);
+                }
+            }
         }
 
         /// <summary>
@@ -30,6 +75,10 @@ namespace Tomokin
         {
             RemoveBook(obj, false);
         }
+        public void RemoveBook(int obj)
+        {
+            RemoveBook(GetBookByNum(obj), false);
+        }
         /// <summary>
         /// 切换为替换模式（按钮）
         /// </summary>
@@ -37,6 +86,7 @@ namespace Tomokin
         public void RepalceMode(GameObject obj)
         {
             Bereplace = obj;
+            Bereplace_int = GetNumByBook(obj);
             isReplace = true;
         }
 
@@ -44,6 +94,14 @@ namespace Tomokin
         {
             Instance = this;
             GM = GameManager.Instance;
+            if (Books.Length == 6)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    UnlockedBooks.Add(Books[i]);
+                }
+            }
+            
         }
     }
 }

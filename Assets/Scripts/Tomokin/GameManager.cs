@@ -58,8 +58,19 @@ namespace Tomokin
         }
 
         #region 拉拢模块
-
-
+        
+        //成功贿赂其他玩家（在之前哟啊判断钱袋）
+        public void BrideSuccess(PlayerGameData Bebribe_Player)
+        {
+            Bebribe_Player.AD.GetBeBribed = PD;
+            PD.GetMoney = -2;
+        }
+        //被其他玩家贿赂
+        public void BeBribe(PlayerGameData Player)
+        {
+            PD.Bebribed = Player;
+            PD.GetMoney = 2;
+        }
 
         #endregion
 
@@ -165,6 +176,20 @@ namespace Tomokin
             RollCards(HCM);
         }
         #endregion
+        //购票减筹码（在之前要判断筹码）
+        public void BuyExVote()
+        {
+            PD.GetChip = -2;
+            PD.ExVote = true;
+            //如果已经购买，可以判定一下
+        }
+
+        //统计票数
+        public void CountVotes()
+        {
+            //向服务器提交数据统一统计
+            //或者直接在客户端统计
+        }
 
         /// <summary>
         /// 打印提案
@@ -190,19 +215,15 @@ namespace Tomokin
             }
         }
 
-        //统计票数
-        public void CountVotes()
-        {
-            //向服务器提交数据统一统计
-            //或者直接在客户端统计
-        }
-
         // Use this for initialization
         void Start()
         {
             Instance = this;
             //订阅
             FindObjectOfType<PrepareStateEvent>().onRollCard += Roll;
+            //FindObjectOfType<PrepareStateEvent>().approveBribe += BeBribe;
+            //FindObjectOfType<PrepareStateEvent>().bribeMessageSent += BribeSuccesee;
+
             //锁定协议书槽
             if (CardsInBook.Count > 5)
                 LockBook = new GameObject[2] { CardsInBook[4], CardsInBook[5] };

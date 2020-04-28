@@ -8,14 +8,14 @@ namespace Tomokin
     /// </summary>
     public class ActionData
     {
-        private GameObject Bebribed;
+        private PlayerGameData Bebribed;
         public List<CardData> Cards;
         public float VoteNumofProposal = 0;
 
         /// <summary>
         /// 被贿赂
         /// </summary>
-        public GameObject GetBeBribed
+        public PlayerGameData GetBeBribed
         {
             set { Bebribed = value; }
             get { return Bebribed; }

@@ -46,7 +46,7 @@ namespace Tomokin
                 //Debug.Log("替换提案：" + BM.Bereplace.name + "为提案：" + gameObject.name);
                 //BM.RemoveBook(BM.Bereplace, true);    //删除被替换的协议书
                 //HM.Add_Book(gameObject, true);        //添加手牌到协议书
-                ProposalManager.AddProp(gameObject, BM.Bereplace);
+                ProposalManager.AddProp(gameObject, BM.Bereplace_int);
                 BM.isReplace = false;
             }
         }
