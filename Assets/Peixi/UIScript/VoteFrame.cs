@@ -20,6 +20,10 @@ namespace Peixi
             voteState.onVoteRoundStart += OnVoteRoundStart;
             voteState.onVoteRoundEnd += OnVoteRoundEnd;
         }
+        private void Start()
+        {
+            Utility.AcitveAllChildren(transform, false);
+        }
         void OnVoteRoundStart(List<Bill> bills)
         {
             Utility.AcitveAllChildren(transform);
@@ -34,11 +38,13 @@ namespace Peixi
         }
         public void OnAgreeButtonPressed()
         {
-
+            voteState.InvokeAgreeProposal();
+            Utility.AcitveAllChildren(transform, false);
         }
         public void OnDisagreeButtonPressed()
         {
-
+            voteState.InvokeDisagreeProposal();
+            Utility.AcitveAllChildren(transform, false);
         }
     }
 }

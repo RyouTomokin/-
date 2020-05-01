@@ -1,14 +1,26 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Peixi
 {
+    /// <summary>
+    /// 开始AccouState时，需要从服务器传入一个Score结构作为显示结果
+    /// </summary>
     public class AccountState : RoundState
     {
         [SerializeField]
         protected GameObject accountFrame;
-
+        public event Action<Score[]> onRoundStart;
+        /// <summary>
+        /// 外部开启AccouState
+        /// </summary>
+        /// <param name="m_score"></param>
+        public void StartRound(Score[] m_score)
+        {
+            onRoundStart.Invoke(m_score);
+        }
         private void Start()
         {
             onRoundStarted += OnRoundStart;

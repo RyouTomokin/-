@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace Peixi
 {
+    /// <summary>
+    /// 玩家的提案
+    /// </summary>
     public struct Bill
     {
         public string name;
@@ -16,7 +19,13 @@ namespace Peixi
     {
         [SerializeField]
         protected GameObject voteFrame;
+        /// <summary>
+        /// 投票开始
+        /// </summary>
         public event Action<List<Bill>> onVoteRoundStart;
+        /// <summary>
+        /// 投票结束
+        /// </summary>
         public event Action onVoteRoundEnd;
         /// <summary>
         /// 投下赞成票事件
@@ -31,20 +40,25 @@ namespace Peixi
         /// </summary>
         public event Action onUseTicket;
         /// <summary>
-        /// 从服务器接收投票结果
+        /// 不使用额外一票
         /// </summary>
-        public event Action onVoteResultReceived;
+        public event Action onNotUseTicket;
+        /// <summary>
+        /// 展示投票结果
+        /// </summary>
+        public event Action onShowVoteResult;
         int voteRound = 1;
         public List<Bill> bills = new List<Bill>();
         private void Start()
         {
-            //onVoteRoundEnd += EndVoteRound;
-            //onVoteRoundStart += StartVoteRound;
+            //regist state events
+            RegisterEvent("onNotUseTicket",onNotUseTicket);
+            //
             onRoundStarted += OnRoundStart;
             onRoundEnded += OnRoundEnd;
+            onNotUseTicket += onNotUseTicket;
             //test code
             TestVote();
-            //RoundStartInvoke();
         }
         protected override void OnRoundStart()
         {
@@ -52,14 +66,17 @@ namespace Peixi
             print("开始投票阶段");
             StartVoteRound();
         }
-        protected override void OnRoundEnd()
+         protected override void OnRoundEnd()
         {
             base.OnRoundEnd();
             print("结束投票阶段，等待其他玩家");
             onVoteRoundEnd.Invoke();
             StartCoroutine(RoundInterval());
         }
-        void StartVoteRound()
+        /// <summary>
+        /// 开始投票回合
+        /// </summary>
+        public void StartVoteRound()
         {
             voteFrame.SetActive(true);
             print("开始第" + voteRound + "轮投票");
@@ -72,7 +89,10 @@ namespace Peixi
                 Debug.LogWarning("onVoteRoundStart is empty");
             }
         }
-        void EndVoteRound()
+        /// <summary>
+        /// 结束投票回合
+        /// </summary>
+        public void EndVoteRound()
         {
             voteFrame.SetActive(false);
             voteRound += 1;
@@ -109,11 +129,33 @@ namespace Peixi
                 onUseTicket.Invoke();
             }
         }
-        public void InvokeVoteResultReceived()
+        public void InvokeShowVoteResult()
         {
-            if (onVoteResultReceived != null)
+            if (onShowVoteResult != null)
             {
-                onVoteResultReceived.Invoke();
+                onShowVoteResult.Invoke();
+            }
+        }
+        public void InvokeNotUseTicket()
+        {
+            if (onNotUseTicket!=null)
+            {
+                onNotUseTicket.Invoke();
+            }
+            else
+            {
+                Debug.LogWarning("onNotUseTicket is empty");
+            }
+        }
+        public void InvokeVoteRoundEnd()
+        {
+            if (onVoteRoundEnd != null)
+            {
+                onVoteRoundEnd.Invoke();
+            }
+            else
+            {
+                Debug.LogWarning("onNotUseTicket is empty");
             }
         }
         IEnumerator RoundInterval()
@@ -144,6 +186,10 @@ namespace Peixi
             bills.Insert(0, player1);
             bills.Insert(1, player2);
             bills.Insert(2, player3);
+        }
+        void NotUseTicket()
+        {
+            print("NotUseTicket");
         }
     }
 }

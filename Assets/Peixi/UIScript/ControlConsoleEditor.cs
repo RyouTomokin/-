@@ -39,7 +39,7 @@ public class ControlConsoleEditor : Editor
         }
         if (GUILayout.Button("显示投票结果"))
         {
-            FindObjectOfType<VoteState>().InvokeVoteResultReceived();
+            FindObjectOfType<VoteState>().InvokeShowVoteResult();
         }
     }
 }

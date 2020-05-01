@@ -15,45 +15,35 @@ namespace Peixi
         [SerializeField]
         GameObject[] champions;
         AccountState accountState;
-
         List<Score> scores = new List<Score>();
-
         private void Start()
         {
             ActivateFrame(false);
-
             accountState = FindObjectOfType<AccountState>();
-            accountState.onRoundStarted += OnRoundStart;
+            accountState.onRoundStart += ShowPlayerScore;
             accountState.onRoundEnded += OnRoundEnd;
-            Test();
+            //Test();
         }
-
         void OnRoundStart()
         {
             //print("AccountFrame connect well");
            ActivateFrame(true);
-            ShowPlayerScore();
+            //ShowPlayerScore();
         }
-
         void OnRoundEnd()
         {
             ActivateFrame(false);
         }
-
-        void ShowPlayerScore()
+        void ShowPlayerScore(Score[] m_score)
         {
             for (int i = 0; i < champions.Length; i++)
             {
                 Text[] texts = champions[i].GetComponentsInChildren<Text>();
-                //print(texts[0].transform.name);
-                //print(texts[1].transform.name);
-                //print(texts[2].transform.name);
-                texts[0].text = scores[i].name;
-                texts[1].text = scores[i].chipGain.ToString();
-                texts[2].text = scores[i].GcoinGain.ToString();
+                texts[0].text = m_score[i].name;
+                texts[1].text = m_score[i].chipGain.ToString();
+                texts[2].text = m_score[i].GcoinGain.ToString();
             }
         }
-
         void ActivateFrame(bool active)
         {
             foreach (Transform child in transform)
@@ -61,7 +51,6 @@ namespace Peixi
                 child.gameObject.SetActive(active);
             }
         }
-
         void Test()
         {
             Score player1 = new Score();
@@ -83,7 +72,6 @@ namespace Peixi
             scores.Insert(1, player2);
             scores.Insert(2, player3);
         }
-
     }
 }
 

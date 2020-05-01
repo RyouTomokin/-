@@ -21,6 +21,7 @@ namespace Peixi
         }
         public void CancelUseTicket()
         {
+            vote.InvokeEvent("onNotUseTicket");
             Utility.AcitveAllChildren(transform, false);
         }
         void StartUseTicketFrame()
