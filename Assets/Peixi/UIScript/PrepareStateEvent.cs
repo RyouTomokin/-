@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using UnityEngine.Playables;
+using Tomokin;
 
 namespace Peixi
 {
@@ -42,7 +43,7 @@ namespace Peixi
         /// <summary>
         /// 向其他玩家发送贿赂请求
         /// </summary>
-        public event Action<string> bribeMessageSent;
+        public event Action<int> bribeMessageSent;
         /// <summary>
         /// 收到贿赂请求处理结果
         /// </summary>
@@ -105,6 +106,7 @@ namespace Peixi
         {
             inquireBribeFrame.SetActive(true);
             dealOnlinePlayer1Button.SetActive(false);
+            bribeMessageSent.Invoke((CilentManager.PlayerNum + 1) % 3);
         }
 
         public void OnDealPlayer2ButtonPressed()

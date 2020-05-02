@@ -12,7 +12,7 @@ namespace Tomokin
         public GameObject[] PlayerMsg;      //显示玩家信息的面板
         public GameObject[] GameScenes;     //游戏的UI
 
-        public static PlayerGameData[] PD = new PlayerGameData[3];
+        public static PlayerGameData[] PD = new PlayerGameData[3];  //名字+ID
 
         private bool IsReady = false;
 
@@ -33,7 +33,7 @@ namespace Tomokin
 
         public void JoinRoom()
         {
-            JoinRoom(GameManager.PlayerName);
+            JoinRoom(CilentManager.PlayerName);
         }
 
         public void LeaveRoom(string name)
@@ -58,27 +58,35 @@ namespace Tomokin
             IsReady = !IsReady;
             if (!IsReady) return;
             //判断所有玩家都准备了
-            this.gameObject.SetActive(false);
-            foreach (var scene in GameScenes)
-            {
-                scene.SetActive(true);
-            }
+            
             GameStartInit(TomokinNet.PlayersInRoom, true);
         }
         
         public void GameStartInit(List<string> names, bool ishouseowner)
         {
+            this.gameObject.SetActive(false);
+            foreach (var scene in GameScenes)
+            {
+                scene.SetActive(true);
+            }
             //生成3个玩家的数据类
             for (int i = 0; i < names.Count; i++)
             {
                 PD[i] = new PlayerGameData(names[i], i, ishouseowner);
-                if (names[i] == GameManager.PlayerName)
-                    GameManager.PD = PD[i];
+                CilentManager.PDs[i] = PD[i];
+                if (names[i] == CilentManager.PlayerName)
+                    CilentManager.PlayerNum = i;
             }
-            
+            if (ishouseowner)
+            {
+                int[] n = HouseOwner.AgreementInit();
+                Net.InitAgreement(n[0], n[1]);
+            }
+
+            GameManager.Instance.Roll();
 
             //进入准备阶段
-            FindObjectOfType<PrepareStateEvent>().RoundStartInvoke();
+            //FindObjectOfType<PrepareStateEvent>().RoundStartInvoke();
         }
     }
 }

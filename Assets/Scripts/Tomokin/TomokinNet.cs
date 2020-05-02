@@ -25,7 +25,15 @@ namespace Tomokin
             if (PlayersInRoom.Count == 3)
                 roomManager.GameStartInit(PlayersInRoom, isHouseOwner);
             else
-                Debug.Log("人数不对，进入游戏错误");
+            {
+                Debug.Log("人数不对，进入游戏错误:" + PlayersInRoom.Count);
+                
+            }
+            foreach (var item in PlayersInRoom)
+            {
+                Debug.Log(item);
+            }
+
         }
 
         public void OnLogin()
@@ -63,7 +71,6 @@ namespace Tomokin
             foreach (string pn in player_nicknames)
             {
                 roomManager.JoinRoom(OnlyName(pn));
-                PlayersInRoom.Add(pn);
             }
             roomManager.JoinRoom();
         }
@@ -84,6 +91,7 @@ namespace Tomokin
         {
             Debug.Log(nickname + "退出了房间");
             roomManager.LeaveRoom(OnlyName(nickname));
+            PlayersInRoom.Remove(nickname);
             //添加到文本框
         }
 
@@ -94,6 +102,64 @@ namespace Tomokin
 
         public void OnTurnEnter(int step_num)
         {
+        }
+
+        public void OnAgreementInit(int agreement_1, int agreement_2)
+        {
+            FindObjectOfType<BookManager>().Add_Card_To_Book(0, agreement_1);
+            FindObjectOfType<BookManager>().Add_Card_To_Book(1, agreement_2);
+            HouseOwner.ReadyInit();
+            Net.InitDone();
+        }
+
+        public void OnVote(StepTwoActionData stepTwoActionData)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void OnOtherPlayerActionGet(C.ActionData actionData)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void OnCardGet()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void OnVote(StepTwoActionData stepTwoActionData, bool isExtra)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void OnVoteGet(float poll, bool isExtra)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void OnChatMessageGet(string chat_message)
+        {
+            FindObjectOfType<TextInputManager>().RessiveMsg(chat_message);
+        }
+
+        public void OnInitDone(string done_nickname)
+        {
+            HouseOwner.ReadyAdd();
+        }
+
+        public void OnStepStart(int step_num)
+        {
+            GameManager.Stages = step_num;
+        }
+
+        public void OnOtherPlayerActionAns(bool b)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void OnActionEnd(string end_nickname)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

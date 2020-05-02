@@ -13,8 +13,9 @@ namespace Tomokin
         public bool isReplace = false;      //替换模式
         public GameObject Bereplace;        //被替换的卡牌对象
         public int Bereplace_int;
-        public static GameObject[] Books;
-        public static List<GameObject> UnlockedBooks;
+        public GameObject[] BookCards;
+        public static GameObject[] Books = new GameObject[6];
+        public static List<GameObject> UnlockedBooks = new List<GameObject>();
 
         public void Add_Book_Prop(GameObject book)
         {
@@ -23,6 +24,14 @@ namespace Tomokin
                 if (book == Books[i])
                     ProposalManager.AddProp(null, i);
             }
+        }
+
+        public void Add_Card_To_Book(int pos, int card)
+        {
+            Books = BookCards;
+            Books[pos].SetActive(true);
+            Books[pos].GetComponent<CardMsg>().card = GM.CardsInLibarary[card];
+            Books[pos].GetComponent<Image>().sprite = GM.CardsInLibarary[card].icon;
         }
         //通过协议书槽的序号找到协议书
         public static GameObject GetBookByNum(int n)
@@ -94,6 +103,7 @@ namespace Tomokin
         {
             Instance = this;
             GM = GameManager.Instance;
+            Books = BookCards;
             if (Books.Length == 6)
             {
                 for (int i = 0; i < 4; i++)
