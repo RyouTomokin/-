@@ -12,9 +12,8 @@ namespace Tomokin
 
         public static int Turns;
         public static int Stages;
-        public static string PlayerName;                            //本玩家姓名
+
         public HandCardsManager HCM;                                //本玩家的手牌管理器
-        public static PlayerGameData PD;
 
         public List<CardData> CardsInLibarary;                      //牌库中的卡牌
         private List<GameObject> UIs = new List<GameObject>();      //协议书和手牌的UI（按钮）
@@ -59,17 +58,31 @@ namespace Tomokin
 
         #region 拉拢模块
         
-        //成功贿赂其他玩家（在之前哟啊判断钱袋）
+        //成功贿赂其他玩家（在之前要判断钱袋）
         public void BrideSuccess(PlayerGameData Bebribe_Player)
         {
-            Bebribe_Player.AD.GetBeBribed = PD;
-            PD.GetMoney = -2;
+            Bebribe_Player.Bebribed.Add(CilentManager.playerdata);
+            CilentManager.playerdata.GetMoney = -2;
         }
-        //被其他玩家贿赂
+        //被其他玩家贿赂成功
         public void BeBribe(PlayerGameData Player)
         {
-            PD.Bebribed = Player;
-            PD.GetMoney = 2;
+            CilentManager.playerdata.Bebribed.Add(Player);
+            CilentManager.playerdata.GetMoney = 2;
+        }
+
+        public void SendBrideMsg(int num)
+        {
+            Debug.Log(num);
+            if(num<CilentManager.PDs.Length)
+                Debug.Log(CilentManager.PDs[num].PlayerName);
+            //发送贿赂请求（NET）
+        }
+
+        public void ReceivedBrideMsg()    
+        {
+            PrepareStateEvent prepare = FindObjectOfType<PrepareStateEvent>();
+            prepare.OnBribeMessageReceived();
         }
 
         #endregion
@@ -179,8 +192,8 @@ namespace Tomokin
         //购票减筹码（在之前要判断筹码）
         public void BuyExVote()
         {
-            PD.GetChip = -2;
-            PD.ExVote = true;
+            CilentManager.playerdata.GetChip = -2;
+            CilentManager.playerdata.ExVote = true;
             //如果已经购买，可以判定一下
         }
 
@@ -221,6 +234,7 @@ namespace Tomokin
             Instance = this;
             //订阅
             FindObjectOfType<PrepareStateEvent>().onRollCard += Roll;
+            FindObjectOfType<PrepareStateEvent>().bribeMessageSent += SendBrideMsg;
             //FindObjectOfType<PrepareStateEvent>().approveBribe += BeBribe;
             //FindObjectOfType<PrepareStateEvent>().bribeMessageSent += BribeSuccesee;
 

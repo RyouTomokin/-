@@ -19,7 +19,7 @@ namespace Tomokin
         {
             BookManager BM = BookManager.Instance;
             HandCardsManager HM = HandCardsManager.Instance;
-            if (prop.InBook != null)
+            if (prop.InBook == -1)
             {
                 BM.RemoveBook(prop.InBook);
             }
@@ -96,7 +96,7 @@ namespace Tomokin
             InBook = b;
             if (h != null) HandCard = h.GetComponent<CardMsg>().card;
             if (b != -1) BookCard = BookManager.GetBookByNum(b).GetComponent<CardMsg>().card;
-            Player = GameManager.PD;
+            Player = CilentManager.playerdata;
         }
     }
 }

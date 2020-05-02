@@ -24,7 +24,7 @@ namespace Tomokin
         public void Login()
         {
             if (PlayerName.text == "") return;
-            GameManager.PlayerName = PlayerName.text;
+            CilentManager.PlayerName = PlayerName.text;
             Name = PlayerName.text + "|" + MyMath.IdGen();
             Net.Login(Name);
 
