@@ -24,12 +24,21 @@ namespace Peixi
         {
             Utility.AcitveAllChildren(transform, false);
         }
-        void OnVoteRoundStart(List<Bill> bills)
+        void OnVoteRoundStart()
         {
-            Utility.AcitveAllChildren(transform);
-            billboard.text = "玩家" + bills[voteRound].name + "的提案是:";
-            content.text = bills[voteRound].action + bills[voteRound].card1;
-            voteRound++;
+            List<Bill> bills = voteState.PlayerBills;
+            if (bills != null)
+            {
+                Utility.AcitveAllChildren(transform);
+                billboard.text = "玩家" + bills[voteRound].name + "的提案是:";
+                content.text = bills[voteRound].action + bills[voteRound].card1;
+                voteRound++;
+            }
+            else
+            {
+                throw new System.Exception("没有初始化bill");
+            }
+
         }
         void OnVoteRoundEnd()
         {
@@ -46,6 +55,8 @@ namespace Peixi
             voteState.InvokeDisagreeProposal();
             Utility.AcitveAllChildren(transform, false);
         }
+
+
     }
 }
     

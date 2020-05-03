@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Peixi
 {
     /// <summary>
-    /// 玩家的提案
+    /// 记录提案
     /// </summary>
     public struct Bill
     {
@@ -15,6 +15,18 @@ namespace Peixi
         public string card1;
         public string card2;
     }
+    /// <summary>
+    /// 记录投票结果
+    /// </summary>
+    public struct Vote
+    {
+        public float negativeVote;
+        public float positiveVote;
+    }
+    /// <summary>
+    /// 服务器使用StartRound(List<Bill> m_playerBill)开启投票回合
+    /// 服务器使用InvokeShowVoteResult(Vote m_vote)显示投票结果
+    /// </summary>
     public class VoteState : RoundState
     {
         [SerializeField]
@@ -22,7 +34,7 @@ namespace Peixi
         /// <summary>
         /// 投票开始
         /// </summary>
-        public event Action<List<Bill>> onVoteRoundStart;
+        public event Action onVoteRoundStart;
         /// <summary>
         /// 投票结束
         /// </summary>
@@ -46,9 +58,14 @@ namespace Peixi
         /// <summary>
         /// 展示投票结果
         /// </summary>
-        public event Action onShowVoteResult;
+        public event Action<Vote> onShowVoteResult;
         int voteRound = 1;
-        public List<Bill> bills = new List<Bill>();
+
+        List<Bill> playerBills = new List<Bill>();
+        public List<Bill> PlayerBills
+        {
+            get { return playerBills; }
+        }
         private void Start()
         {
             //regist state events
@@ -57,16 +74,14 @@ namespace Peixi
             onRoundStarted += OnRoundStart;
             onRoundEnded += OnRoundEnd;
             onNotUseTicket += onNotUseTicket;
-            //test code
-            TestVote();
         }
         protected override void OnRoundStart()
         {
-            base.OnRoundStart();
-            print("开始投票阶段");
-            StartVoteRound();
+            //base.OnRoundStart();
+            //print("开始投票阶段");
+            //StartVoteRound();
         }
-         protected override void OnRoundEnd()
+        protected override void OnRoundEnd()
         {
             base.OnRoundEnd();
             print("结束投票阶段，等待其他玩家");
@@ -74,15 +89,21 @@ namespace Peixi
             StartCoroutine(RoundInterval());
         }
         /// <summary>
-        /// 开始投票回合
+        /// 服务器开始投票回合
         /// </summary>
+        /// <param name="m_playerBills">所有玩家的提案</param>
+        public void StartRound(List<Bill> m_playerBills)
+        {
+            playerBills = m_playerBills;
+            StartVoteRound();
+        }
         public void StartVoteRound()
         {
             voteFrame.SetActive(true);
             print("开始第" + voteRound + "轮投票");
             if (onVoteRoundStart != null)
             {
-                onVoteRoundStart.Invoke(bills);
+                onVoteRoundStart.Invoke();
             }
             else
             {
@@ -129,11 +150,11 @@ namespace Peixi
                 onUseTicket.Invoke();
             }
         }
-        public void InvokeShowVoteResult()
+        public void InvokeShowVoteResult(Vote m_vote)
         {
             if (onShowVoteResult != null)
             {
-                onShowVoteResult.Invoke();
+                onShowVoteResult.Invoke(m_vote);
             }
         }
         public void InvokeNotUseTicket()
@@ -168,25 +189,7 @@ namespace Peixi
             yield return new WaitForSeconds(1.5f);
             StartVoteRound();
         }
-        void TestVote()
-        {
-            Bill player1 = new Bill();
-            player1.name = "Player1";
-            player1.action = "Delete";
-            player1.card1 = "Card001";
-            Bill player2 = new Bill();
-            player2.name = "Player2";
-            player2.action = "Add";
-            player2.card1 = "Card002";
-            Bill player3 = new Bill();
-            player3.name = "Player3";
-            player3.action = "Replace";
-            player3.card1 = "Card003";
-            player3.card2 = "Card004";
-            bills.Insert(0, player1);
-            bills.Insert(1, player2);
-            bills.Insert(2, player3);
-        }
+
         void NotUseTicket()
         {
             print("NotUseTicket");

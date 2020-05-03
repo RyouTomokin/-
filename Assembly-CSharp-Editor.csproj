@@ -63,7 +63,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\TutorialInfo\Scripts\Editor\ReadmeEditor.cs" />
+    <Compile Include="Assets\Duy Assets\Hierarchy 2\Editor\GroupSelection.cs" />
+    <Compile Include="Assets\Duy Assets\Hierarchy 2\Editor\HierarchyCanvas.cs" />
+    <Compile Include="Assets\Duy Assets\Hierarchy 2\Editor\HierarchyEditor.cs" />
+    <Compile Include="Assets\Duy Assets\Hierarchy 2\Editor\HierarchySettings.cs" />
+    <Compile Include="Assets\Duy Assets\Hierarchy 2\Editor\IHierarchyElement.cs" />
+    <Compile Include="Assets\Duy Assets\Hierarchy 2\Editor\IHierarchyShelf.cs" />
+    <Compile Include="Assets\Duy Assets\Hierarchy 2\Editor\InstantInspector.cs" />
+    <Compile Include="Assets\Duy Assets\Hierarchy 2\Editor\OpenSettings.cs" />
+    <Compile Include="Assets\Duy Assets\Hierarchy 2\Editor\SceneRenamePopup.cs" />
+    <Compile Include="Assets\Duy Assets\Hierarchy 2\Editor\SelectionsRenamePopup.cs" />
     <Reference Include="UnityEditor.TestRunner">
       <HintPath>G:/NewGBT_Game/Library/ScriptAssemblies/UnityEditor.TestRunner.dll</HintPath>
     </Reference>

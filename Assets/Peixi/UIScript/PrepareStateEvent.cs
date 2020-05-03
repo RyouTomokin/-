@@ -15,6 +15,7 @@ namespace Peixi
         public GameObject dealOnlinePlayer1Button;
         public GameObject dealOnlinePlayer2Button;
         public GameObject bribeButton;
+        public GameObject bribeMessageFrame;
 
         delegate void EmptyEngine();
         EmptyEngine engine;
@@ -22,7 +23,7 @@ namespace Peixi
         public GameObject rollCardButton;
         public GameObject confirmRollCardButton;
         public GameObject cancelRollCardButton;
-        public GameObject bribeMessageFrame;
+        public GameObject rollCardWarnFrame;
 
         /// <summary>
         /// 玩家Roll牌
@@ -39,7 +40,7 @@ namespace Peixi
         /// <summary>
         /// 收到线上玩家的贿赂请求消息
         /// </summary>
-        public event Action bribeMessageReceived;
+        public event Action<string> bribeMessageReceived;
         /// <summary>
         /// 向其他玩家发送贿赂请求
         /// </summary>
@@ -69,7 +70,6 @@ namespace Peixi
                 OnTimeOut();
             }
         }
-
         protected override void OnRoundStart()
         {
             base.OnRoundStart();
@@ -77,7 +77,6 @@ namespace Peixi
             director.playableAsset = timeLines[0];
             director.Play();
         }
-
         protected override void OnRoundEnd()
         {
             base.OnRoundEnd();
@@ -98,22 +97,23 @@ namespace Peixi
             //    director.Play();
             //}
             dealOnlinePlayer1Button.SetActive(true);
+            dealOnlinePlayer2Button.SetActive(true);
             bribeButton.SetActive(false);
             
         }
-
         public void OnDealPlayer1ButtonPressed()
         {
             inquireBribeFrame.SetActive(true);
             dealOnlinePlayer1Button.SetActive(false);
+            dealOnlinePlayer2Button.SetActive(false);
             bribeMessageSent.Invoke((CilentManager.PlayerNum + 1) % 3);
         }
-
         public void OnDealPlayer2ButtonPressed()
         {
-
+            inquireBribeFrame.SetActive(true);
+            dealOnlinePlayer1Button.SetActive(false);
+            dealOnlinePlayer2Button.SetActive(false);
         }
-
         public void OnConfirmBribeButtonPressed()
         {
             print("confirm bribe button press");
@@ -121,26 +121,38 @@ namespace Peixi
             bribeButton.SetActive(true);
             //调用贿赂的底层逻辑（需要知道被贿赂的对象）
         }
-
         public void OnCancelBribeButtonPressed()
         {
             print("cancel bribe button press");
             inquireBribeFrame.SetActive(false);
             bribeButton.SetActive(true);
         }
-
         /// <summary>
-        /// 外界向本地玩家发送BribeMessage时使用此方法
+        /// 服务器向本地玩家发送BribeMessage
         /// </summary>
-        public void OnBribeMessageReceived()
+        /// <param name="name">发送者的名字</param>
+        public void OnBribeMessageReceived(string name)
         {
             if (bribeMessageReceived != null)
             {
-                bribeMessageReceived.Invoke();
+                bribeMessageReceived.Invoke(name);
             }
             //print("收到其他玩家的悄悄话");
         }
-
+        /// <summary>
+        /// 服务器向本地玩家发送BribeMessage
+        /// </summary>
+        /// <param name="playerNumber">发送者的编号</param>
+        public void OnBribeMessageReceived(int playerNumber)
+        {
+            if (bribeMessageReceived != null)
+            {
+                if (playerNumber == 1)
+                {
+                   //需要一个字典来进行名字和编号的转换
+                }
+            }
+        }
         public void InvokeApproveBribe()
         {
             if (approveBribe != null)
@@ -148,7 +160,6 @@ namespace Peixi
                 approveBribe.Invoke();
             }
         }
-
         public void InvokeRejectBribe()
         {
             if (rejectBribe != null)
@@ -156,22 +167,29 @@ namespace Peixi
                 rejectBribe.Invoke();
             }
         }
-
         public void InvokeBribeRequestResultReceived(bool m_result)
         {
             bribeRequestResultReceived.Invoke(m_result);
         }
         #endregion
-
         #region//RollCard
         /// <summary>
         /// 询问是否Rollcard
         /// </summary>
         public void OnRollCardButtonPressed()
         {
-            print("press roll card button");
-            rollCardButton.SetActive(false);
-            inquireRollCardFrame.SetActive(true);
+            //print("press roll card button");
+            PlayerInformation playerInformation = FindObjectOfType<PlayerInformation>();
+            //print(playerInformation.Chip);
+            if (playerInformation.Chip > 2)
+            {
+                rollCardButton.SetActive(false);
+                inquireRollCardFrame.SetActive(true);
+            }
+            else
+            {
+                rollCardWarnFrame.SetActive(true);
+            }
         }
         /// <summary>
         /// 确认Roll牌
@@ -195,6 +213,11 @@ namespace Peixi
             print("cancel roll card");
             rollCardButton.SetActive(true);
             inquireRollCardFrame.SetActive(false);
+        }
+
+        public void ShutDownWarnFrame()
+        {
+
         }
         #endregion
 

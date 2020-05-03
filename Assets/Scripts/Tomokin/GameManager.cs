@@ -82,7 +82,7 @@ namespace Tomokin
         public void ReceivedBrideMsg()    
         {
             PrepareStateEvent prepare = FindObjectOfType<PrepareStateEvent>();
-            prepare.OnBribeMessageReceived();
+            //prepare.OnBribeMessageReceived();
         }
 
         #endregion

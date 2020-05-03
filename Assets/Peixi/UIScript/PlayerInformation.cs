@@ -20,7 +20,8 @@ namespace Peixi
         PrepareStateEvent prepare;
         [SerializeField]
         GameObject clientPlayer;
-
+        [SerializeField]
+        GameObject[] onlinePlayers;
         // Start is called before the first frame update
         void Start()
         {
@@ -57,7 +58,7 @@ namespace Peixi
         }
         public void UpdateServerData()
         {
-
+            
         }
     }
 }

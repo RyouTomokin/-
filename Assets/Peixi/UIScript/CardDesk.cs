@@ -27,8 +27,9 @@ namespace Peixi
             cardStyle[n].SetActive(true);
         }
 
-        void OnVoteRoundStart(List<Bill> bills)
+        void OnVoteRoundStart()
         {
+            List<Bill> bills = voteState.PlayerBills;
             string action = bills[voteRound].action;
             if (action == "Add")
             {
