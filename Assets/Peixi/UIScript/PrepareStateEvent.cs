@@ -16,6 +16,7 @@ namespace Peixi
         public GameObject dealOnlinePlayer2Button;
         public GameObject bribeButton;
         public GameObject bribeMessageFrame;
+        public GameObject bribeWarnFrame;
 
         delegate void EmptyEngine();
         EmptyEngine engine;
@@ -56,7 +57,6 @@ namespace Peixi
             onRoundStarted += OnRoundStart;
             onRoundEnded += OnRoundEnd;
         }
-
         // Update is called once per frame
         void Update()
         {
@@ -73,7 +73,7 @@ namespace Peixi
         protected override void OnRoundStart()
         {
             base.OnRoundStart();
-            print("开始准备阶段");
+            //print("开始准备阶段");
             director.playableAsset = timeLines[0];
             director.Play();
         }
@@ -86,19 +86,27 @@ namespace Peixi
             engine += PlayStateEndAnim;
             StartCoroutine(RoundInterval());
         }
-
         #region//Bribe
         public void OnBribeButtonPressed()
         {
-            print("点击了贿赂按钮");
-            //if (director.state == PlayState.Paused)
-            //{
-            //    director.playableAsset = timeLines[1];
-            //    director.Play();
-            //}
-            dealOnlinePlayer1Button.SetActive(true);
-            dealOnlinePlayer2Button.SetActive(true);
-            bribeButton.SetActive(false);
+            int coin = PlayerInformation.instance.Chip;
+            if (coin >= 2)
+            {
+                //print("点击了贿赂按钮");
+                //if (director.state == PlayState.Paused)
+                //{
+                //    director.playableAsset = timeLines[1];
+                //    director.Play();
+                //}
+                dealOnlinePlayer1Button.SetActive(true);
+                dealOnlinePlayer2Button.SetActive(true);
+                bribeButton.SetActive(false);
+            }
+            else
+            {
+                bribeWarnFrame.SetActive(true);
+            }
+     
             
         }
         public void OnDealPlayer1ButtonPressed()
@@ -126,6 +134,10 @@ namespace Peixi
             print("cancel bribe button press");
             inquireBribeFrame.SetActive(false);
             bribeButton.SetActive(true);
+        }
+        public void ShutDownBribeWarnFrame()
+        {
+            bribeWarnFrame.SetActive(false);
         }
         /// <summary>
         /// 服务器向本地玩家发送BribeMessage
@@ -172,6 +184,7 @@ namespace Peixi
             bribeRequestResultReceived.Invoke(m_result);
         }
         #endregion
+
         #region//RollCard
         /// <summary>
         /// 询问是否Rollcard
@@ -181,7 +194,7 @@ namespace Peixi
             //print("press roll card button");
             PlayerInformation playerInformation = FindObjectOfType<PlayerInformation>();
             //print(playerInformation.Chip);
-            if (playerInformation.Chip > 2)
+            if (playerInformation.Chip >= 2)
             {
                 rollCardButton.SetActive(false);
                 inquireRollCardFrame.SetActive(true);
@@ -217,7 +230,7 @@ namespace Peixi
 
         public void ShutDownWarnFrame()
         {
-
+            rollCardWarnFrame.SetActive(false);
         }
         #endregion
 

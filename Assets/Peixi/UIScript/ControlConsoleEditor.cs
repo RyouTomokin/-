@@ -7,21 +7,33 @@ using Peixi;
 [CustomEditor(typeof(ControlConsole))]
 public class ControlConsoleEditor : Editor
 {
+    bool showPrepareStateButton;
     ControlConsole control;
     bool test;
     List<Bill> bills = new List<Bill>();
+    List<PlayerData> datas = new List<PlayerData>();
     Vote result;
     private void OnEnable()
     {
         control = (ControlConsole)target;
         TestVote();
+        TestUpdatePlayerData();
     }
 
     public override void OnInspectorGUI()
     {
-        if (GUILayout.Button("开始准备阶段"))
+        showPrepareStateButton = EditorGUILayout.Foldout(showPrepareStateButton, "准备阶段");
+        if (showPrepareStateButton)
         {
-            FindObjectOfType<PrepareStateEvent>().RoundStartInvoke();
+            if (GUILayout.Button("开始准备阶段"))
+            {
+                FindObjectOfType<PrepareStateEvent>().RoundStartInvoke();
+            }
+        }
+ 
+        if (GUILayout.Button("从服务器更新玩家信息"))
+        {
+            FindObjectOfType<PlayerInformation>().UpdatePlayerData(datas);
         }
         if (GUILayout.Button("在线玩家1发送悄悄话"))
         {
@@ -46,6 +58,10 @@ public class ControlConsoleEditor : Editor
             result.positiveVote = 2.5f;
             FindObjectOfType<VoteState>().InvokeShowVoteResult(result);
         }
+        if (GUILayout.Button("测试Func"))
+        {
+
+        }
     }
     void TestVote()
     {
@@ -65,6 +81,27 @@ public class ControlConsoleEditor : Editor
         bills.Insert(0, player1);
         bills.Insert(1, player2);
         bills.Insert(2, player3);
+    }
+    void TestUpdatePlayerData()
+    {
+        PlayerData player1 = new PlayerData();
+        player1.name = "player1";
+        player1.chip = 5;
+        player1.coin = 5;
+
+        PlayerData player2 = new PlayerData();
+        player2.name = "player2";
+        player2.chip = 5;
+        player2.coin = 5;
+
+        PlayerData player3 = new PlayerData();
+        player3.name = "player3";
+        player3.chip = 0;
+        player3.coin = 0;
+
+        datas.Add(player3);
+        datas.Add(player2);
+        datas.Add(player1);
     }
 }
 
