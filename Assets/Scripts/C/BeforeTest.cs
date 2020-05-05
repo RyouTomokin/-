@@ -163,12 +163,22 @@ namespace C
             throw new System.NotImplementedException();
         }
 
-        void NetInterface.OnOtherPlayerActionAns(bool b)
+        void NetInterface.OnOtherPlayerActionAns(string nick_name,bool b)
         {
             throw new System.NotImplementedException();
         }
 
         void NetInterface.OnActionEnd(string end_nickname)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        void NetInterface.OnVoteEnd(bool isAgree, float agree, float disagree)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        void NetInterface.OnSynchronizeAssets(string owner_nickname, int glod, int chip)
         {
             throw new System.NotImplementedException();
         }

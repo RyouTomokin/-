@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 241c08fd080fb614cb0f3286c4e7173b, type: 3}
   m_Name: Card020
   m_EditorClassIdentifier: 
-  CardId: C020
-  RGB: 010000000200000001000000
+  RGB: ffffffff0100000000000000
   pref: 1
   icon: {fileID: 21300000, guid: d846b68c35bfa5d4589cd82b3d9525e1, type: 3}

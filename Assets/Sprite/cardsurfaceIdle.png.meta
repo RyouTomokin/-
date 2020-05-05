@@ -1,0 +1,1237 @@
+fileFormatVersion: 2
+guid: cc754a8d330c20442b8db22da4060064
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -7703085430020954167
+    second: cardsurfaceIdle_0
+  - first:
+      213: -6088838304447744510
+    second: cardsurfaceIdle_1
+  - first:
+      213: -763886285218370786
+    second: cardsurfaceIdle_2
+  - first:
+      213: -9125036956439980097
+    second: cardsurfaceIdle_3
+  - first:
+      213: -2474712268790568602
+    second: cardsurfaceIdle_4
+  - first:
+      213: 502098424430111361
+    second: cardsurfaceIdle_5
+  - first:
+      213: -3166396596877965066
+    second: cardsurfaceIdle_6
+  - first:
+      213: -4217165959305023808
+    second: cardsurfaceIdle_7
+  - first:
+      213: -3974606240072959142
+    second: cardsurfaceIdle_8
+  - first:
+      213: 1012428121113296106
+    second: cardsurfaceIdle_9
+  - first:
+      213: 8772224914607676393
+    second: cardsurfaceIdle_10
+  - first:
+      213: -3962468470738505035
+    second: cardsurfaceIdle_11
+  - first:
+      213: -9093082295555284940
+    second: cardsurfaceIdle_12
+  - first:
+      213: -1172173633308464170
+    second: cardsurfaceIdle_13
+  - first:
+      213: 6184424339158318494
+    second: cardsurfaceIdle_14
+  - first:
+      213: 5572284354826058900
+    second: cardsurfaceIdle_15
+  - first:
+      213: -2377744389388221481
+    second: cardsurfaceIdle_16
+  - first:
+      213: 1945073999087947842
+    second: cardsurfaceIdle_17
+  - first:
+      213: 6774010320111316445
+    second: cardsurfaceIdle_18
+  - first:
+      213: -4661583027347511630
+    second: cardsurfaceIdle_19
+  - first:
+      213: 2601638259045203579
+    second: cardsurfaceIdle_20
+  - first:
+      213: 6294897286991566355
+    second: cardsurfaceIdle_21
+  - first:
+      213: -8263944272891829787
+    second: cardsurfaceIdle_22
+  - first:
+      213: 4760489216269418256
+    second: cardsurfaceIdle_23
+  - first:
+      213: 2686692788120071518
+    second: cardsurfaceIdle_24
+  - first:
+      213: 8128966958070018006
+    second: cardsurfaceIdle_25
+  - first:
+      213: -7506101870985842102
+    second: cardsurfaceIdle_26
+  - first:
+      213: 1588916040866686705
+    second: cardsurfaceIdle_27
+  - first:
+      213: 2221744149346379558
+    second: cardsurfaceIdle_28
+  - first:
+      213: 411039252530781808
+    second: cardsurfaceIdle_29
+  - first:
+      213: -1762318976206437039
+    second: cardsurfaceIdle_30
+  - first:
+      213: 7087306172894091018
+    second: cardsurfaceIdle_31
+  - first:
+      213: 399069501396582034
+    second: cardsurfaceIdle_32
+  - first:
+      213: -3295391112556129962
+    second: cardsurfaceIdle_33
+  - first:
+      213: 9178611101302839626
+    second: cardsurfaceIdle_34
+  - first:
+      213: 8198525584242879084
+    second: cardsurfaceIdle_35
+  - first:
+      213: 7022251178069907115
+    second: cardsurfaceIdle_36
+  - first:
+      213: -5352615473211722892
+    second: cardsurfaceIdle_37
+  - first:
+      213: -2752165701767613847
+    second: cardsurfaceIdle_38
+  - first:
+      213: 7658723129152954973
+    second: cardsurfaceIdle_39
+  - first:
+      213: 5428509829343315377
+    second: cardsurfaceIdle_40
+  - first:
+      213: -6042844664027282423
+    second: cardsurfaceIdle_41
+  - first:
+      213: 337674858615003422
+    second: cardsurfaceIdle_0
+  - first:
+      213: -9134976407971236842
+    second: cardsurfaceIdle_1
+  - first:
+      213: 4506036045495315532
+    second: cardsurfaceIdle_2
+  - first:
+      213: -143165260932184655
+    second: cardsurfaceIdle_3
+  - first:
+      213: -5617895086957963633
+    second: cardsurfaceIdle_4
+  - first:
+      213: 4626656541816679560
+    second: cardsurfaceIdle_5
+  - first:
+      213: -71476290096414543
+    second: cardsurfaceIdle_6
+  - first:
+      213: -1135746278776560331
+    second: cardsurfaceIdle_7
+  - first:
+      213: -1661566242790108903
+    second: cardsurfaceIdle_8
+  - first:
+      213: 5134385793700534381
+    second: cardsurfaceIdle_9
+  - first:
+      213: -177665089612958298
+    second: cardsurfaceIdle_10
+  - first:
+      213: 3680289530016672972
+    second: cardsurfaceIdle_11
+  - first:
+      213: -3902570102963012142
+    second: cardsurfaceIdle_12
+  - first:
+      213: -2939726440441771482
+    second: cardsurfaceIdle_13
+  - first:
+      213: -8774665560031593295
+    second: cardsurfaceIdle_14
+  - first:
+      213: 8322252151384594039
+    second: cardsurfaceIdle_15
+  - first:
+      213: 4520280633893433842
+    second: cardsurfaceIdle_16
+  - first:
+      213: 8881767714889254016
+    second: cardsurfaceIdle_17
+  - first:
+      213: 67132783674754135
+    second: cardsurfaceIdle_18
+  - first:
+      213: 7346749768743636697
+    second: cardsurfaceIdle_19
+  - first:
+      213: 6161939633075178238
+    second: cardsurfaceIdle_20
+  - first:
+      213: 7205746089115140409
+    second: cardsurfaceIdle_21
+  - first:
+      213: -7809988869501192672
+    second: cardsurfaceIdle_22
+  - first:
+      213: 8421565410945514143
+    second: cardsurfaceIdle_23
+  - first:
+      213: 2201366207250199792
+    second: cardsurfaceIdle_24
+  - first:
+      213: 8159551092255704051
+    second: cardsurfaceIdle_25
+  - first:
+      213: -5570674928257079741
+    second: cardsurfaceIdle_26
+  - first:
+      213: 2634276644252789301
+    second: cardsurfaceIdle_27
+  - first:
+      213: -138651155681514131
+    second: cardsurfaceIdle_28
+  - first:
+      213: 6191484927899190975
+    second: cardsurfaceIdle_29
+  - first:
+      213: 8658610921955604236
+    second: cardsurfaceIdle_30
+  - first:
+      213: 122966594967017074
+    second: cardsurfaceIdle_31
+  - first:
+      213: -4016122700588819949
+    second: cardsurfaceIdle_32
+  - first:
+      213: -1651425099122949576
+    second: cardsurfaceIdle_33
+  - first:
+      213: -2931845415597312234
+    second: cardsurfaceIdle_34
+  - first:
+      213: 2533804436577013762
+    second: cardsurfaceIdle_35
+  - first:
+      213: -7271684149421062833
+    second: cardsurfaceIdle_36
+  - first:
+      213: -6370954870667821581
+    second: cardsurfaceIdle_37
+  - first:
+      213: 4759494248903649889
+    second: cardsurfaceIdle_38
+  - first:
+      213: -7283453227772050519
+    second: cardsurfaceIdle_39
+  - first:
+      213: -3579507204804212940
+    second: cardsurfaceIdle_40
+  - first:
+      213: -8890179109958333509
+    second: cardsurfaceIdle_41
+  externalObjects: {}
+  serializedVersion: 10
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: -1
+    aniso: -1
+    mipBias: -100
+    wrapU: 1
+    wrapV: 1
+    wrapW: -1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 8192
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 8192
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: cardsurfaceIdle_0
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 23
+        width: 180
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e19d35dae79afa400800000000000000
+      internalID: 337674858615003422
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_1
+      rect:
+        serializedVersion: 2
+        x: 213
+        y: 23
+        width: 180
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 614fc4b2b5b0a3180800000000000000
+      internalID: -9134976407971236842
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_2
+      rect:
+        serializedVersion: 2
+        x: 415
+        y: 23
+        width: 180
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c4caadcc8e7a88e30800000000000000
+      internalID: 4506036045495315532
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_3
+      rect:
+        serializedVersion: 2
+        x: 617
+        y: 23
+        width: 180
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1b506f524ff530ef0800000000000000
+      internalID: -143165260932184655
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_4
+      rect:
+        serializedVersion: 2
+        x: 819
+        y: 23
+        width: 180
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f86557cee2a3902b0800000000000000
+      internalID: -5617895086957963633
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_5
+      rect:
+        serializedVersion: 2
+        x: 1021
+        y: 23
+        width: 180
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 88c68b89c9f253040800000000000000
+      internalID: 4626656541816679560
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_6
+      rect:
+        serializedVersion: 2
+        x: 1223
+        y: 23
+        width: 180
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1b0c0fe51b0120ff0800000000000000
+      internalID: -71476290096414543
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_7
+      rect:
+        serializedVersion: 2
+        x: 1425
+        y: 23
+        width: 180
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5352d82e6c40d30f0800000000000000
+      internalID: -1135746278776560331
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_8
+      rect:
+        serializedVersion: 2
+        x: 1627
+        y: 23
+        width: 180
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 91117b73e4ee0f8e0800000000000000
+      internalID: -1661566242790108903
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_9
+      rect:
+        serializedVersion: 2
+        x: 1828
+        y: 23
+        width: 182
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d68155d1da0014740800000000000000
+      internalID: 5134385793700534381
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_10
+      rect:
+        serializedVersion: 2
+        x: 2030
+        y: 23
+        width: 182
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6a5b1a4da8ec88df0800000000000000
+      internalID: -177665089612958298
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_11
+      rect:
+        serializedVersion: 2
+        x: 2232
+        y: 23
+        width: 182
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cccab3b14d3031330800000000000000
+      internalID: 3680289530016672972
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_12
+      rect:
+        serializedVersion: 2
+        x: 2435
+        y: 23
+        width: 180
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2dd74d50b2947d9c0800000000000000
+      internalID: -3902570102963012142
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_13
+      rect:
+        serializedVersion: 2
+        x: 2637
+        y: 23
+        width: 180
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 62a05a4b06ef337d0800000000000000
+      internalID: -2939726440441771482
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_14
+      rect:
+        serializedVersion: 2
+        x: 2839
+        y: 23
+        width: 180
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1bc767fc9202a3680800000000000000
+      internalID: -8774665560031593295
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_15
+      rect:
+        serializedVersion: 2
+        x: 3041
+        y: 23
+        width: 180
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 776528e0d349e7370800000000000000
+      internalID: 8322252151384594039
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_16
+      rect:
+        serializedVersion: 2
+        x: 3243
+        y: 23
+        width: 180
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2f1bb4c79434bbe30800000000000000
+      internalID: 4520280633893433842
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_17
+      rect:
+        serializedVersion: 2
+        x: 3445
+        y: 23
+        width: 180
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 084c187dda0624b70800000000000000
+      internalID: 8881767714889254016
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_18
+      rect:
+        serializedVersion: 2
+        x: 3647
+        y: 23
+        width: 180
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 75487bb39e08ee000800000000000000
+      internalID: 67132783674754135
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_19
+      rect:
+        serializedVersion: 2
+        x: 3849
+        y: 23
+        width: 180
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9dec5ab6df5e4f560800000000000000
+      internalID: 7346749768743636697
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_20
+      rect:
+        serializedVersion: 2
+        x: 4051
+        y: 23
+        width: 180
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: efac8dce27b938550800000000000000
+      internalID: 6161939633075178238
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_21
+      rect:
+        serializedVersion: 2
+        x: 4253
+        y: 23
+        width: 180
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9314e5fe3e3fff360800000000000000
+      internalID: 7205746089115140409
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_22
+      rect:
+        serializedVersion: 2
+        x: 4455
+        y: 23
+        width: 180
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 02670a590885d9390800000000000000
+      internalID: -7809988869501192672
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_23
+      rect:
+        serializedVersion: 2
+        x: 4657
+        y: 23
+        width: 180
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f9abf143f196fd470800000000000000
+      internalID: 8421565410945514143
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_24
+      rect:
+        serializedVersion: 2
+        x: 4859
+        y: 23
+        width: 180
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0f472b3f6e2dc8e10800000000000000
+      internalID: 2201366207250199792
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_25
+      rect:
+        serializedVersion: 2
+        x: 5061
+        y: 23
+        width: 180
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3f34d8cbc7c8c3170800000000000000
+      internalID: 8159551092255704051
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_26
+      rect:
+        serializedVersion: 2
+        x: 5263
+        y: 23
+        width: 180
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 346ef0edaacf0b2b0800000000000000
+      internalID: -5570674928257079741
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_27
+      rect:
+        serializedVersion: 2
+        x: 5465
+        y: 23
+        width: 180
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 53aabc4a6a4de8420800000000000000
+      internalID: 2634276644252789301
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_28
+      rect:
+        serializedVersion: 2
+        x: 5667
+        y: 23
+        width: 180
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d6de7ed2289631ef0800000000000000
+      internalID: -138651155681514131
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_29
+      rect:
+        serializedVersion: 2
+        x: 5869
+        y: 23
+        width: 180
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fb6cd9fecb29ce550800000000000000
+      internalID: 6191484927899190975
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_30
+      rect:
+        serializedVersion: 2
+        x: 6070
+        y: 23
+        width: 182
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c073b7b12c0992870800000000000000
+      internalID: 8658610921955604236
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_31
+      rect:
+        serializedVersion: 2
+        x: 6272
+        y: 23
+        width: 182
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2769f34777dd4b100800000000000000
+      internalID: 122966594967017074
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_32
+      rect:
+        serializedVersion: 2
+        x: 6474
+        y: 23
+        width: 182
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 31a5501aeadd348c0800000000000000
+      internalID: -4016122700588819949
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_33
+      rect:
+        serializedVersion: 2
+        x: 6677
+        y: 23
+        width: 180
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 832cc993f95f419e0800000000000000
+      internalID: -1651425099122949576
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_34
+      rect:
+        serializedVersion: 2
+        x: 6879
+        y: 23
+        width: 180
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 617f6fac02eff47d0800000000000000
+      internalID: -2931845415597312234
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_35
+      rect:
+        serializedVersion: 2
+        x: 7081
+        y: 23
+        width: 180
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2005b7cd5b1e92320800000000000000
+      internalID: 2533804436577013762
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_36
+      rect:
+        serializedVersion: 2
+        x: 7283
+        y: 23
+        width: 180
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f454bea0bc9c51b90800000000000000
+      internalID: -7271684149421062833
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_37
+      rect:
+        serializedVersion: 2
+        x: 7485
+        y: 23
+        width: 180
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3fdbcc5cc42d597a0800000000000000
+      internalID: -6370954870667821581
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_38
+      rect:
+        serializedVersion: 2
+        x: 7687
+        y: 23
+        width: 180
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 16aaa607dce1d0240800000000000000
+      internalID: 4759494248903649889
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_39
+      rect:
+        serializedVersion: 2
+        x: 7889
+        y: 23
+        width: 180
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9a38974f0e9fbea90800000000000000
+      internalID: -7283453227772050519
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_40
+      rect:
+        serializedVersion: 2
+        x: 8091
+        y: 23
+        width: 180
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 43781ba8929035ec0800000000000000
+      internalID: -3579507204804212940
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cardsurfaceIdle_41
+      rect:
+        serializedVersion: 2
+        x: 8293
+        y: 23
+        width: 180
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bbbc551a33dbf9480800000000000000
+      internalID: -8890179109958333509
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

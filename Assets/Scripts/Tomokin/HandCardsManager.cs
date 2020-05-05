@@ -31,19 +31,12 @@ namespace Tomokin
         /// <param name="hand">手牌</param>
         public void Add_Book(GameObject hand, bool isReplace)
         {
-            if (GM == null)
-                GM = GameManager.Instance;
-            //GM.Player.GetComponent<ActionData>().Proposal[0] = hand;//用于SimpleScene
-            //if (!isReplace)
-            //    Debug.Log("添加提案：" + hand.name);
             GameObject book = null;
-            GameObject prt;
-            foreach (GameObject item in GM.CardsInBook)
+            foreach (GameObject b in BookManager.Books)
             {
-                prt = item.transform.parent.gameObject;
-                if (!prt.activeSelf)
+                if (!b.activeSelf)
                 {
-                    book = prt;
+                    book = b;
                     break;
                 }
             }
@@ -56,7 +49,16 @@ namespace Tomokin
             book.SetActive(true);
             //book.transform.SetAsLastSibling();
             book.GetComponent<CardMsg>().card = hand.GetComponent<CardMsg>().card;
-            book.GetComponent<Image>().sprite = book.GetComponent<CardMsg>().card.icon;
+            //book.GetComponent<Image>().sprite = book.GetComponent<CardMsg>().card.icon;
+            int i = 0;
+            foreach (var text in book.GetComponentsInChildren<Text>())
+            {
+                int v = book.GetComponent<CardMsg>().card.GetByNum(i);
+                if (v > 0) text.text = "+" + v;
+                else text.text = v.ToString();
+                i++;
+            }
+
             hand.SetActive(false);
             hand.GetComponent<CardMsg>().card = null;
             hand.transform.SetAsLastSibling();

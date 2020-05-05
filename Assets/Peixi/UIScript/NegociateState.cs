@@ -11,9 +11,9 @@ namespace Peixi
         protected GameObject ticketFrame;
 
         /// <summary>
-        /// 同意购买额外一票时间（外部人员调用）
+        /// 同意购买额外一票
         /// </summary>
-        public event Action onAgreeBuyTicket;
+        public event Action<bool> onAgreeBuyTicket;
         private void Start()
         {
             onRoundStarted += OnRoundStart;
@@ -34,22 +34,16 @@ namespace Peixi
             StartCoroutine(RoundInterval());
         }
 
-        public void AgreeBuyTicket()
+        public void BuyAddtionalTicket(bool buyAdditonalTicket)
         {
             if (onAgreeBuyTicket != null)
             {
-                onAgreeBuyTicket.Invoke();
+                onAgreeBuyTicket.Invoke(buyAdditonalTicket);
             }
             else
             {
-                Debug.LogWarning("onAgreeBuyTicket is empty");
+                throw new Exception("onAgreeBuyTicket没有订阅者");
             }
-            ticketFrame.SetActive(false);
-        }
-
-        public void DisagreeBuyTicket()
-        {
-            ticketFrame.SetActive(false);
         }
         IEnumerator RoundInterval()
         {

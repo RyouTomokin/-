@@ -18,12 +18,14 @@ namespace C
             协议初始,
             开始投票,
             投票结果,
+            投票结束,
             行为,
             行为回复,
             行为结束,
             轮次,
             初始化完成,
             阶段开始消息,
+            资产同步,
         }
 
        // public ChatManager chatManager;
@@ -190,6 +192,7 @@ namespace C
             if(messageType == MessageType.行为回复)
             {
                 b = 10;
+                //nickname @ isagree
                 PhotonNetwork.RaiseEvent(b, tar_player_nickname + "@" + data, null, SendOptions.SendReliable);
                 return;
             }
@@ -202,6 +205,20 @@ namespace C
                 }
                 b = 11;
                 PhotonNetwork.RaiseEvent(b, PhotonNetwork.LocalPlayer.NickName, null, SendOptions.SendReliable);
+                return;
+            }
+            if(messageType == MessageType.资产同步)
+            {
+                b = 12;
+                string s = PhotonNetwork.LocalPlayer.NickName + "@" + data;
+                PhotonNetwork.RaiseEvent(b, s, null, SendOptions.SendReliable);
+                return;
+            }
+            if(messageType == MessageType.投票结束)
+            {
+                if (!IsHouseOwner()) return;
+                b = 13;
+                PhotonNetwork.RaiseEvent(b, data, null, SendOptions.SendReliable);
                 return;
             }
            
@@ -375,13 +392,10 @@ namespace C
                 {
                     Debug.Log("接收行为回复消息：" + (string)chat_s);
                     string[] ss = ((string)chat_s).Split('@');
-                    if(ss[0] == PhotonNetwork.LocalPlayer.NickName)
-                    {
-                        if (int.Parse(ss[1]) == 0)
-                            Net.GetInterface().OnOtherPlayerActionAns(false);
-                        else
-                            Net.GetInterface().OnOtherPlayerActionAns(true);
-                    }
+                    if (int.Parse(ss[1]) == 0)
+                        Net.GetInterface().OnOtherPlayerActionAns(ss[0],false);
+                    else
+                        Net.GetInterface().OnOtherPlayerActionAns(ss[0],true);
                     
                 }
             }
@@ -393,6 +407,28 @@ namespace C
                 {
                     Debug.Log("接收行为完成消息：" + (string)chat_s);
                     Net.GetInterface().OnActionEnd((string)chat_s);
+
+                }
+            }
+            if(photonEvent.Code == 11)
+            {
+                object chat_s;
+                if (photonEvent.Parameters.TryGetValue(245, out chat_s))
+                {
+                    Debug.Log("接收资产同步消息：" + (string)chat_s);
+                    string[] ss = ((string)chat_s).Split('@');
+                    Net.GetInterface().OnSynchronizeAssets(ss[0], int.Parse(ss[1]), int.Parse(ss[2]));
+
+                }
+            }
+            if (photonEvent.Code == 12)
+            {
+                object chat_s;
+                if (photonEvent.Parameters.TryGetValue(245, out chat_s))
+                {
+                    Debug.Log("接收投票结束消息：" + (string)chat_s);
+                    string[] ss = ((string)chat_s).Split('@');
+                    Net.GetInterface().OnVoteEnd(Net.String2Bool(ss[0]), int.Parse(ss[1]), int.Parse(ss[2]));
 
                 }
             }

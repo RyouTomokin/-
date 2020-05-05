@@ -54,14 +54,20 @@ namespace C
         //收到投票 只有房主能得到回调
         void OnVoteGet(float poll,bool isExtra);
 
+        //投票结束 回调
+        void OnVoteEnd(bool isAgree, float agree, float disagree);
+
         //接收到其他玩家操作
         void OnOtherPlayerActionGet(ActionData actionData);
 
         //接收到其他玩家请求回复 b是否同意
-        void OnOtherPlayerActionAns(bool b);
+        void OnOtherPlayerActionAns(string tar_nickname,bool b);
 
         //行动结束
         void OnActionEnd(string end_nickname);
+
+        //资产同步消息回调
+        void OnSynchronizeAssets(string owner_nickname, int glod, int chip);
 
         //聊天消息回调
         void OnChatMessageGet(string chat_message);

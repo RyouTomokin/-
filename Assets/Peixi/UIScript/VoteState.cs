@@ -5,52 +5,85 @@ using UnityEngine;
 
 namespace Peixi
 {
+    /// <summary>
+    /// 记录提案
+    /// </summary>
     public struct Bill
     {
         public string name;
         public string action;
-        public string card1;
-        public string card2;
+        public int card1;
+        public int card2;
+
+        public Bill(string n, string a, int c1, int c2)
+        {
+            name = n;
+            action = a;
+            card1 = c1;
+            card2 = c2;
+        }
     }
+    /// <summary>
+    /// 记录投票结果
+    /// </summary>
+    public struct Vote
+    {
+        public float negativeVote;
+        public float positiveVote;
+    }
+    /// <summary>
+    /// 服务器使用StartRound(List<Bill> m_playerBill)开启投票回合
+    /// 服务器使用InvokeShowVoteResult(Vote m_vote)显示投票结果
+    /// </summary>
     public class VoteState : RoundState
     {
         [SerializeField]
         protected GameObject voteFrame;
-        public event Action<List<Bill>> onVoteRoundStart;
+        /// <summary>
+        /// 投票开始
+        /// </summary>
+        public event Action onVoteRoundStart;
+        /// <summary>
+        /// 投票结束
+        /// </summary>
         public event Action onVoteRoundEnd;
         /// <summary>
-        /// 投下赞成票事件
+        /// 投票事件
         /// </summary>
-        public event Action onAgreeVoteSent;
-        /// <summary>
-        /// 投下反对票事件
-        /// </summary>
-        public event Action onDisagreeVoteSent;
+        public event Action<bool> onVoteSent;
         /// <summary>
         /// 使用额外一票事件
         /// </summary>
-        public event Action onUseTicket;
+        public event Action<bool> onUseTicket;
         /// <summary>
-        /// 从服务器接收投票结果
+        /// 不使用额外一票
         /// </summary>
-        public event Action onVoteResultReceived;
+        public event Action onNotUseTicket;
+        /// <summary>
+        /// 展示投票结果
+        /// </summary>
+        public event Action<Vote> onShowVoteResult;
         int voteRound = 1;
-        public List<Bill> bills = new List<Bill>();
+
+        List<Bill> playerBills = new List<Bill>();
+        public List<Bill> PlayerBills
+        {
+            get { return playerBills; }
+        }
         private void Start()
         {
-            //onVoteRoundEnd += EndVoteRound;
-            //onVoteRoundStart += StartVoteRound;
+            //regist state events
+            RegisterEvent("onNotUseTicket",onNotUseTicket);
+            //
             onRoundStarted += OnRoundStart;
             onRoundEnded += OnRoundEnd;
-            //test code
-            TestVote();
-            //RoundStartInvoke();
+            onNotUseTicket += onNotUseTicket;
         }
         protected override void OnRoundStart()
         {
-            base.OnRoundStart();
-            print("开始投票阶段");
-            StartVoteRound();
+            //base.OnRoundStart();
+            //print("开始投票阶段");
+            //StartVoteRound();
         }
         protected override void OnRoundEnd()
         {
@@ -59,20 +92,34 @@ namespace Peixi
             onVoteRoundEnd.Invoke();
             StartCoroutine(RoundInterval());
         }
-        void StartVoteRound()
+        /// <summary>
+        /// 服务器开始投票回合
+        /// </summary>
+        /// <param name="m_playerBills">所有玩家的提案</param>
+
+        public void RoundStartInvoke(List<Bill> m_playerBills)
+        {
+            playerBills = m_playerBills;
+            StartVoteRound();
+        }
+            
+        public void StartVoteRound()
         {
             voteFrame.SetActive(true);
             print("开始第" + voteRound + "轮投票");
             if (onVoteRoundStart != null)
             {
-                onVoteRoundStart.Invoke(bills);
+                onVoteRoundStart.Invoke();
             }
             else
             {
                 Debug.LogWarning("onVoteRoundStart is empty");
             }
         }
-        void EndVoteRound()
+        /// <summary>
+        /// 结束投票回合
+        /// </summary>
+        public void EndVoteRound()
         {
             voteFrame.SetActive(false);
             voteRound += 1;
@@ -85,35 +132,38 @@ namespace Peixi
                 StartCoroutine(VoteInterval());
             }
         }
-        public void InvokeAgreeProposal()
+        public void InvokeVoteSent(bool m_vote)
         {
             print("投下赞成票");
-            if (onAgreeVoteSent != null)
+            if (onVoteSent != null)
             {
-                onAgreeVoteSent.Invoke();
+                onVoteSent.Invoke(m_vote);
             }      
         }
-        public void InvokeDisagreeProposal()
-        {
-            print("投下反对票");
-            if (onDisagreeVoteSent != null)
-            {
-                onDisagreeVoteSent.Invoke();
-            }
-        }
-        public void InvokeUseTicket()
+        public void InvokeUseTicket(bool m_useTicket)
         {
             print("使用额外一票");
             if (onUseTicket != null)
             {
-                onUseTicket.Invoke();
+                onUseTicket.Invoke(m_useTicket);
             }
         }
-        public void InvokeVoteResultReceived()
+        public void InvokeShowVoteResult(Vote m_vote)
         {
-            if (onVoteResultReceived != null)
+            if (onShowVoteResult != null)
             {
-                onVoteResultReceived.Invoke();
+                onShowVoteResult.Invoke(m_vote);
+            }
+        }
+        public void InvokeVoteRoundEnd()
+        {
+            if (onVoteRoundEnd != null)
+            {
+                onVoteRoundEnd.Invoke();
+            }
+            else
+            {
+                Debug.LogWarning("onNotUseTicket is empty");
             }
         }
         IEnumerator RoundInterval()
@@ -126,24 +176,10 @@ namespace Peixi
             yield return new WaitForSeconds(1.5f);
             StartVoteRound();
         }
-        void TestVote()
+
+        void NotUseTicket()
         {
-            Bill player1 = new Bill();
-            player1.name = "Player1";
-            player1.action = "Delete";
-            player1.card1 = "Card001";
-            Bill player2 = new Bill();
-            player2.name = "Player2";
-            player2.action = "Add";
-            player2.card1 = "Card002";
-            Bill player3 = new Bill();
-            player3.name = "Player3";
-            player3.action = "Replace";
-            player3.card1 = "Card003";
-            player3.card2 = "Card004";
-            bills.Insert(0, player1);
-            bills.Insert(1, player2);
-            bills.Insert(2, player3);
+            print("NotUseTicket");
         }
     }
 }

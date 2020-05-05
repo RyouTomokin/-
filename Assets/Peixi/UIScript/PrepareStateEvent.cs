@@ -4,6 +4,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Playables;
 using Tomokin;
+using UnityEngine.UI;
 
 namespace Peixi
 {
@@ -15,6 +16,9 @@ namespace Peixi
         public GameObject dealOnlinePlayer1Button;
         public GameObject dealOnlinePlayer2Button;
         public GameObject bribeButton;
+        public GameObject bribeMessageFrame;
+        public GameObject bribeWarnFrame;
+        public GameObject bribeResultFrame;
 
         delegate void EmptyEngine();
         EmptyEngine engine;
@@ -22,7 +26,7 @@ namespace Peixi
         public GameObject rollCardButton;
         public GameObject confirmRollCardButton;
         public GameObject cancelRollCardButton;
-        public GameObject bribeMessageFrame;
+        public GameObject rollCardWarnFrame;
 
         /// <summary>
         /// 玩家Roll牌
@@ -31,15 +35,15 @@ namespace Peixi
         /// <summary>
         /// 拒绝接受贿赂
         /// </summary>
-        public event Action rejectBribe;
+        public event Action<string> rejectBribe;
         /// <summary>
         /// 同意接受贿赂
         /// </summary>
-        public event Action approveBribe;
+        public event Action<string> approveBribe;
         /// <summary>
         /// 收到线上玩家的贿赂请求消息
         /// </summary>
-        public event Action bribeMessageReceived;
+        public event Action<string> bribeMessageReceived;
         /// <summary>
         /// 向其他玩家发送贿赂请求
         /// </summary>
@@ -47,7 +51,7 @@ namespace Peixi
         /// <summary>
         /// 收到贿赂请求处理结果
         /// </summary>
-        public event Action<bool> bribeRequestResultReceived;
+        public event Action<string,bool> bribeRequestResultReceived;
         // Start is called before the first frame update
         void Start()
         {
@@ -55,7 +59,6 @@ namespace Peixi
             onRoundStarted += OnRoundStart;
             onRoundEnded += OnRoundEnd;
         }
-
         // Update is called once per frame
         void Update()
         {
@@ -69,15 +72,13 @@ namespace Peixi
                 OnTimeOut();
             }
         }
-
         protected override void OnRoundStart()
         {
             base.OnRoundStart();
-            print("开始准备阶段");
+            //print("开始准备阶段");
             director.playableAsset = timeLines[0];
             director.Play();
         }
-
         protected override void OnRoundEnd()
         {
             base.OnRoundEnd();
@@ -87,33 +88,36 @@ namespace Peixi
             engine += PlayStateEndAnim;
             StartCoroutine(RoundInterval());
         }
-
         #region//Bribe
         public void OnBribeButtonPressed()
         {
-            print("点击了贿赂按钮");
-            //if (director.state == PlayState.Paused)
-            //{
-            //    director.playableAsset = timeLines[1];
-            //    director.Play();
-            //}
-            dealOnlinePlayer1Button.SetActive(true);
-            bribeButton.SetActive(false);
+            int coin = PlayerInformation.instance.Chip;
+            if (coin >= 2)
+            {
+                //print("点击了贿赂按钮");
+                //if (director.state == PlayState.Paused)
+                //{
+                //    director.playableAsset = timeLines[1];
+                //    director.Play();
+                //}
+                dealOnlinePlayer1Button.SetActive(true);
+                dealOnlinePlayer2Button.SetActive(true);
+                bribeButton.SetActive(false);
+            }
+            else
+            {
+                bribeWarnFrame.SetActive(true);
+            }
+     
             
         }
-
-        public void OnDealPlayer1ButtonPressed()
+        public void OnDealPlayerButtonPressed(int playerNum)
         {
             inquireBribeFrame.SetActive(true);
             dealOnlinePlayer1Button.SetActive(false);
-            bribeMessageSent.Invoke((CilentManager.PlayerNum + 1) % 3);
+            dealOnlinePlayer2Button.SetActive(false);
+            bribeMessageSent.Invoke(playerNum);
         }
-
-        public void OnDealPlayer2ButtonPressed()
-        {
-
-        }
-
         public void OnConfirmBribeButtonPressed()
         {
             print("confirm bribe button press");
@@ -121,45 +125,79 @@ namespace Peixi
             bribeButton.SetActive(true);
             //调用贿赂的底层逻辑（需要知道被贿赂的对象）
         }
-
         public void OnCancelBribeButtonPressed()
         {
             print("cancel bribe button press");
             inquireBribeFrame.SetActive(false);
             bribeButton.SetActive(true);
         }
-
+        public void ShutDownBribeWarnFrame()
+        {
+            bribeWarnFrame.SetActive(false);
+        }
         /// <summary>
-        /// 外界向本地玩家发送BribeMessage时使用此方法
+        /// 服务器向本地玩家发送BribeMessage
         /// </summary>
-        public void OnBribeMessageReceived()
+        /// <param name="name">发送者的名字</param>
+        public void OnBribeMessageReceived(string name)
         {
             if (bribeMessageReceived != null)
             {
-                bribeMessageReceived.Invoke();
+                bribeMessageReceived.Invoke(name);
             }
             //print("收到其他玩家的悄悄话");
         }
-
+        /// <summary>
+        /// 服务器向本地玩家发送BribeMessage
+        /// </summary>
+        /// <param name="playerNumber">发送者的编号</param>
+        public void OnBribeMessageReceived(int playerNumber)
+        {
+            if (bribeMessageReceived != null)
+            {
+                if (playerNumber == 1)
+                {
+                   //需要一个字典来进行名字和编号的转换
+                }
+            }
+        }
         public void InvokeApproveBribe()
         {
             if (approveBribe != null)
             {
-                approveBribe.Invoke();
+                string name = FindObjectOfType<PlayerInformation>().playerName;
+                approveBribe.Invoke(name);
             }
         }
-
         public void InvokeRejectBribe()
         {
             if (rejectBribe != null)
             {
-                rejectBribe.Invoke();
+                string name = FindObjectOfType<PlayerInformation>().playerName;
+                rejectBribe.Invoke(name);
             }
         }
-
-        public void InvokeBribeRequestResultReceived(bool m_result)
+        /// <summary>
+        /// 服务器回答贿赂请求结果
+        /// </summary>
+        /// <param name="m_name">受贿人的名字</param>
+        /// <param name="m_result">受贿结果</param>
+        public void InvokeBribeRequestResultReceived(string m_name,bool m_result)
         {
-            bribeRequestResultReceived.Invoke(m_result);
+            if (bribeRequestResultReceived != null)
+            {
+                bribeRequestResultReceived.Invoke(m_name, m_result);
+                bribeResultFrame.SetActive(true);
+                var content = bribeResultFrame.GetComponentInChildren<Text>();
+                if (m_result)
+                {
+                    content.text = m_name + "同意了你的请求";
+                }
+                else
+                {
+                    content.text = m_name + "拒绝了你的请求";
+                }
+            }
         }
         #endregion
 
@@ -169,9 +207,18 @@ namespace Peixi
         /// </summary>
         public void OnRollCardButtonPressed()
         {
-            print("press roll card button");
-            rollCardButton.SetActive(false);
-            inquireRollCardFrame.SetActive(true);
+            //print("press roll card button");
+            PlayerInformation playerInformation = FindObjectOfType<PlayerInformation>();
+            //print(playerInformation.Chip);
+            if (playerInformation.Chip >= 2)
+            {
+                rollCardButton.SetActive(false);
+                inquireRollCardFrame.SetActive(true);
+            }
+            else
+            {
+                rollCardWarnFrame.SetActive(true);
+            }
         }
         /// <summary>
         /// 确认Roll牌
@@ -196,7 +243,17 @@ namespace Peixi
             rollCardButton.SetActive(true);
             inquireRollCardFrame.SetActive(false);
         }
+
+        public void ShutDownWarnFrame()
+        {
+            rollCardWarnFrame.SetActive(false);
+        }
         #endregion
+
+        public void StartRound()
+        {
+ 
+        }
 
         /// <summary>
         /// 时间到或者按下结束按钮
@@ -205,7 +262,6 @@ namespace Peixi
         {
             print("结束准备阶段，等待其他玩家");
         }
-
         void PlayStateEndAnim()
         {
             director.time -= Time.deltaTime;

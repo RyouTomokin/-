@@ -1,23 +1,26 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Peixi;
 
 public class Test : MonoBehaviour
 {
-    static Test instance;
+    public Func<string> bribe = new Func<string>(BribePlayer);
+    
     // Start is called before the first frame update
     void Start()
     {
-        instance = this;
-        FindObjectOfType<PrepareStateEvent>().onRollCard += Test1;
+       
     }
-    void Test1()
+    static string BribePlayer()
     {
-        print("roll card");
+        print(11);
+        return "Alice";
     }
-    void Test1(string n)
+    string Receive()
     {
-        print(222);
+        print(bribe());
+        return null;
     }
 }
