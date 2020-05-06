@@ -25,13 +25,25 @@ namespace Tomokin
                     ProposalManager.AddProp(null, i);
             }
         }
-
+        /// <summary>
+        /// 添加到协议书
+        /// </summary>
+        /// <param name="pos">协议书槽</param>
+        /// <param name="card">卡牌id</param>
         public void Add_Card_To_Book(int pos, int card)
         {
             Books = BookCards;
             Books[pos].SetActive(true);
             Books[pos].GetComponent<CardMsg>().card = GM.CardsInLibarary[card];
-            Books[pos].GetComponent<Image>().sprite = GM.CardsInLibarary[card].icon;
+            //Books[pos].GetComponent<Image>().sprite = GM.CardsInLibarary[card].icon;
+            int i = 0;
+            foreach (var text in BookCards[pos].GetComponentsInChildren<Text>())
+            {
+                int v = BookCards[pos].GetComponent<CardMsg>().card.GetByNum(i);
+                if (v > 0) text.text = "+" + v;
+                else text.text = v.ToString();
+                i++;
+            } 
         }
         //通过协议书槽的序号找到协议书
         public static GameObject GetBookByNum(int n)
@@ -59,7 +71,7 @@ namespace Tomokin
             return false;
         }
 
-        public static void LockChange()
+        public static void UnlockChange()
         {
             if (Books.Length == 6)
             {

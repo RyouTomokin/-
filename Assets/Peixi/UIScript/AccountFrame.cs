@@ -9,6 +9,15 @@ namespace Peixi
         public string name;
         public int GcoinGain;
         public int chipGain;
+        public float score;
+
+        public Score(string n,int G, int c, float s)
+        {
+            name = n;
+            GcoinGain = G;
+            chipGain = c;
+            score = s;
+        }
     }
     public class AccountFrame : MonoBehaviour
     {

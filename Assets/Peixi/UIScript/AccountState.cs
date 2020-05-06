@@ -42,6 +42,10 @@ namespace Peixi
             yield return new WaitForSeconds(2);
             FindObjectOfType<PrepareStateEvent>().RoundStartInvoke();
         }
+        public void RoundStartInvoke(Score[] m_score)
+        {
+            onRoundStart.Invoke(m_score);
+        }
     }
 }
 

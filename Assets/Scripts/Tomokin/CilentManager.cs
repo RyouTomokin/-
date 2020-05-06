@@ -8,7 +8,8 @@ namespace Tomokin
     //本玩家的基本信息
     public static class CilentManager
     {
-        public static string PlayerName;                            
+        public static string PlayerName;
+        public static string PlayerID;
         public static int PlayerNum;
         public static PlayerGameData[] PDs = new PlayerGameData[3];
         public static PlayerGameData playerdata;
@@ -20,10 +21,14 @@ namespace Tomokin
         private static int Stages;
         private static List<Proposal> PropOfTurn = new List<Proposal>();
         private static int Ready;
+        private static int StageDone;
+        private static float vote;
+        private static float agree;
+        private static float disagree;
 
         public static void Init()
         {
-            Turns = 1;
+            Turns = 0;
             Stages = 1;
             Net.StartStep(Stages);
             //开放前两个槽关闭后两个
@@ -37,8 +42,35 @@ namespace Tomokin
             if (Ready == 2)
             {
                 Init();
+                Turns = 1;
             }
         }
+
+        public static void StageAdd()
+        {
+            StageDone++;
+            Debug.Log("StageDone = " + StageDone);
+            if (StageDone == 3)
+            {
+                AddJieDuan();
+                vote = 0;
+                disagree = 0;
+                agree = 0;
+            }
+        }
+
+        public static void ReciveVote(float poll)
+        {
+            if (poll > 0) agree += poll;
+            else if (poll < 0) disagree -= poll;
+            else Debug.LogError("poll==0，有问题");
+            vote += poll;
+        }
+
+        //投票结果上传到服务器
+        public static float GetVote { get => vote; }
+        public static float GetAgree { get => agree; }
+        public static float GetDisagree { get => disagree; }
 
         public static Proposal GetPropInNet
         {
@@ -97,6 +129,7 @@ namespace Tomokin
                 Stages = 1;
                 AddTurns();
             }
+            StageDone = 0;
             Net.StartStep(Stages);
         }
         //返回一个时间倒计时

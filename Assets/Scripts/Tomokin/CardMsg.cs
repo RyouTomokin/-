@@ -22,7 +22,16 @@ namespace Tomokin
             if (card != null)
             {
                 //obj.transform.parent.gameObject.GetComponent<Image>().sprite = card.icon;
-                gameObject.GetComponent<Image>().sprite = card.icon;
+                //gameObject.GetComponent<Image>().sprite = card.icon;
+                int i = 0;
+                foreach (var text in gameObject.GetComponentsInChildren<Text>())
+                {
+                    int v = gameObject.GetComponent<CardMsg>().card.GetByNum(i);
+                    if (v > 0) text.text = "+" + v;
+                    else text.text = v.ToString();
+                    i++;
+                }
+
                 card.Get_IsInLib = false;
             }
         }

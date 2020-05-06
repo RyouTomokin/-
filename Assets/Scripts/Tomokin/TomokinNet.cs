@@ -1,22 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using C;
 
 namespace Tomokin
 {
-    public class TomokinNet :MonoBehaviour, NetInterface
+    public class TomokinNet : MonoBehaviour, NetInterface
     {
         public LoginManager loginManager;
         public RoomManager roomManager;
-        public static List<string> PlayersInRoom;
+        public static List<string> PlayersInRoom;   //Name+ID
 
         private void Awake()
         {
             Net.InitNetInterface(this);
-        }
-        public void OnCardGet(List<int> cards)
-        {
         }
 
         public void OnEveryReady(bool isHouseOwner)
@@ -27,12 +25,17 @@ namespace Tomokin
             else
             {
                 Debug.Log("人数不对，进入游戏错误:" + PlayersInRoom.Count);
-                
+
             }
-            foreach (var item in PlayersInRoom)
+            int x = CilentManager.PlayerNum;
+            for (int i = 0; i < 3; i++)
             {
-                Debug.Log(item);
+                Debug.Log(PlayersInRoom[x]);
+
+                GameManager.Instance.Player_Name_Text[i].GetComponent<Text>().text = OnlyName(PlayersInRoom[x]);
+                x = (x + 1) % 3;
             }
+            Debug.Log(CilentManager.PlayerNum);
 
         }
 
@@ -71,19 +74,18 @@ namespace Tomokin
             foreach (string pn in player_nicknames)
             {
                 roomManager.JoinRoom(OnlyName(pn));
+                PlayersInRoom.Add(pn);
             }
             roomManager.JoinRoom();
-        }
-
-        public void OnOtherPlayerActionGet()
-        {
+            PlayersInRoom.Add(CilentManager.PlayerName + CilentManager.PlayerID);
         }
 
         public void OnPlayerJoin(string nickname)
         {
             Debug.Log(nickname + "进入房间");
-            
+
             roomManager.JoinRoom(OnlyName(nickname));
+            PlayersInRoom.Add(nickname);
             //添加到文本框
         }
 
@@ -93,6 +95,8 @@ namespace Tomokin
             roomManager.LeaveRoom(OnlyName(nickname));
             PlayersInRoom.Remove(nickname);
             //添加到文本框
+            FindObjectOfType<TextInputManager>().SendMsg(OnlyName(nickname) + "退出了房间");
+            //游戏暂停或停止
         }
 
         public void OnRoomListGet(List<string> rooms)
@@ -100,9 +104,6 @@ namespace Tomokin
             loginManager.RoomListGet(rooms);
         }
 
-        public void OnTurnEnter(int step_num)
-        {
-        }
 
         public void OnAgreementInit(int agreement_1, int agreement_2)
         {
@@ -112,29 +113,45 @@ namespace Tomokin
             Net.InitDone();
         }
 
-        public void OnVote(StepTwoActionData stepTwoActionData)
+        public void OnOtherPlayerActionAns(string tar_nickname, bool b)
         {
-            throw new System.NotImplementedException();
+            FindObjectOfType<GameManager>().BribeSuccess(tar_nickname);
         }
 
         public void OnOtherPlayerActionGet(C.ActionData actionData)
         {
-            throw new System.NotImplementedException();
-        }
+            Debug.Log("接收到" + actionData.action_owner_nickname + "的请求");
+            int step = actionData.step_num;
 
-        public void OnCardGet()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void OnVote(StepTwoActionData stepTwoActionData, bool isExtra)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void OnVoteGet(float poll, bool isExtra)
-        {
-            throw new System.NotImplementedException();
+            if (step == 1)  //收到贿赂请求
+            {
+                StepOneActionData AD = (StepOneActionData)actionData;
+                Debug.Log(AD.tar_player_nickname);
+                Debug.Log(CilentManager.PlayerName + CilentManager.PlayerID);
+                if (AD.tar_player_nickname == CilentManager.PlayerName+CilentManager.PlayerID)
+                {
+                    //弹出贿赂请求窗口
+                    Debug.Log("AD = " + AD.action_owner_nickname + "||" + CilentManager.PlayerName);
+                    FindObjectOfType<GameManager>().ReceivedBrideMsg(AD.action_owner_nickname);
+                }
+            }
+            else if (step == 2) //收到提案
+            {
+                StepTwoActionData AD = (StepTwoActionData)actionData;
+                ProposalManager.GetPropFromNet(0, AD.hand_card, AD.agreement_id, AD.owner_nickname);
+            }
+            else if (step == 3)
+            {
+                StepThreeActionData AD = (StepThreeActionData)actionData;
+            }
+            else if (step == 4)
+            {
+                StepForthActionData AD = (StepForthActionData)actionData;
+            }
+            else
+            {
+                Debug.LogError("step is not true");
+            }
         }
 
         public void OnChatMessageGet(string chat_message)
@@ -150,16 +167,55 @@ namespace Tomokin
         public void OnStepStart(int step_num)
         {
             GameManager.Stages = step_num;
+            FindObjectOfType<GameManager>().StartStage();
         }
-
-        public void OnOtherPlayerActionAns(bool b)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public void OnActionEnd(string end_nickname)
         {
+            Debug.Log(end_nickname + "回合结束");
+            FindObjectOfType<TextInputManager>().SendMsg("OnActionEnd");
+            //发送给房主
+            HouseOwner.StageAdd();
+        }
+
+        public void OnCardGet()
+        {
             throw new System.NotImplementedException();
+        }
+
+        public void OnTurnEnter(int step_num)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void OnVote(StepTwoActionData stepTwoActionData, bool isExtra)
+        {
+            if (!isExtra)
+            {
+                //所以玩家得到此提案，并对它投票
+            }
+        }
+
+        public void OnVoteGet(float poll, bool isExtra)
+        {
+            if (isExtra) HouseOwner.ReciveVote(poll);
+        }
+
+        public void OnVoteEnd(bool isAgree, float agree, float disagree)
+        {
+            FindObjectOfType<GameManager>().VoteEnd(agree, disagree);
+        }
+
+        public void OnSynchronizeAssets(string owner_nickname, int glod, int chip)
+        {
+            foreach (var pd in CilentManager.PDs)
+            {
+                if (pd.PlayerName == owner_nickname)
+                {
+                    pd.SetChip = chip;
+                    pd.SetMoney = glod;
+                    FindObjectOfType<GameManager>().UpdateUI();
+                }
+            }
         }
     }
 }

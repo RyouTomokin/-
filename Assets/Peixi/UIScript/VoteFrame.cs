@@ -45,12 +45,12 @@ namespace Peixi
             voteRound = 0;
             Utility.AcitveAllChildren(transform, false);
         }
-        public void OnAgreeButtonPressed()
+        void OnVoteRoundStart()
         {
             voteState.InvokeAgreeProposal();
             Utility.AcitveAllChildren(transform, false);
         }
-        public void OnDisagreeButtonPressed()
+        void OnVoteRoundEnd()
         {
             voteState.InvokeDisagreeProposal();
             Utility.AcitveAllChildren(transform, false);

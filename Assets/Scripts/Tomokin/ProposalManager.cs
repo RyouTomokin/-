@@ -12,6 +12,8 @@ namespace Tomokin
         public static void AddProp(GameObject hand, int book)
         {
             TempProp = new Proposal(hand, book);
+            GameManager.Instance.SendMyProposal(TempProp);
+
             //Props_List.Add(TempProp);             //应当把这个回合的提案一起添加
         }
 
@@ -28,8 +30,39 @@ namespace Tomokin
                 HM.Add_Book(prop.InHand);
             }
         }
+
+        public static string GetPropType(Proposal prop)
+        {
+            string tip;
+            if (prop.InHand == null)
+            {
+                tip = "删除";
+            }
+            else if (prop.InBook == -1)
+            {
+                tip = "添加";
+            }
+            else
+            {
+                tip = "替换";
+            }
+            return tip;
+        }
+
         #region
-        //服务器生成提案列表（顺序为玩家的积分升序排列）
+        public static void GetPropFromNet(int inbook, int handcard, int bookcard, string name)
+        {
+            foreach (var pd in CilentManager.PDs)
+            {
+                if (pd.PlayerName == name)
+                {
+                    Proposal prop = new Proposal(inbook, GameManager.Instance.CardsInLibarary[handcard],
+                                                    GameManager.Instance.CardsInLibarary[bookcard], pd);
+                    ProposalManager.PropsofthisTurn.Add(prop);
+                    break;
+                }
+            }
+        }
         //投票结果
         #endregion
 
@@ -97,6 +130,14 @@ namespace Tomokin
             if (h != null) HandCard = h.GetComponent<CardMsg>().card;
             if (b != -1) BookCard = BookManager.GetBookByNum(b).GetComponent<CardMsg>().card;
             Player = CilentManager.playerdata;
+        }
+
+        public Proposal(int ib, CardData hc, CardData bc, PlayerGameData pd)
+        {
+            InBook = ib;
+            HandCard = hc;
+            BookCard = bc;
+            Player = pd;
         }
     }
 }

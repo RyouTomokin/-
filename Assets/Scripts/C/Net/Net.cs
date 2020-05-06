@@ -31,6 +31,21 @@ namespace C
         {
             return netInterface;
         }
+        public static string Bool2String(bool b)
+        {
+            if (b)
+                return "true";
+            else
+                return "false";
+        }
+        public static bool String2Bool(string s)
+        {
+            if (s == "true")
+                return true;
+            if (s == "false")
+                return false;
+            return false;
+        }
         #endregion
 
         #region 游戏开始前网络代码
@@ -96,10 +111,10 @@ namespace C
             netManager.SendResponse(NetManager.MessageType.行为, "", JsonConvert.SerializeObject(actionData));
         }
 
-        //发送玩家行为回复 0拒绝 1同意
-        public static void SendActionAns(int isAgree)
+        //发送玩家行为回复 tar_nickname回复目标昵称 0拒绝 1同意
+        public static void SendActionAns(string tar_nickname,int isAgree)
         {
-            netManager.SendResponse(NetManager.MessageType.行为回复, "",isAgree.ToString() );
+            netManager.SendResponse(NetManager.MessageType.行为回复, tar_nickname,isAgree.ToString() );
         }
 
         //action完毕
@@ -120,7 +135,23 @@ namespace C
             netManager.SendResponse(NetManager.MessageType.投票结果, "", poll.ToString() + "@" + isExtra.ToString());
         }
 
+        //房主调用  投票结束消息 每个提案投票结束后调用
+        public static void EndVote(bool isAgree,float agree,float disagree)
+        {
+            netManager.SendResponse(NetManager.MessageType.投票结束, "", Bool2String(isAgree) + "@" + agree.ToString() + "@" + disagree.ToString());
+            Net.GetInterface().OnVoteEnd(isAgree, agree, disagree);
+        }
+
+        //同步自身资产 gold 钱袋数 chip 筹码数
+        public static void SynchronizeAssets(int gold,int chip)
+        {
+            netManager.SendResponse(NetManager.MessageType.资产同步, "", gold.ToString() + "@" + chip.ToString());
+        }
+
+        
+
         #endregion
+
 
     }
 }

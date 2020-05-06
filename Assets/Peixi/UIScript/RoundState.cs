@@ -7,8 +7,8 @@ namespace Peixi
 {
     public class RoundState : MonoBehaviour
     {
-        public event Action onRoundStarted;
-        public event Action onRoundEnded;
+        public Action onRoundStarted;
+        public Action onRoundEnded;
         /// <summary>
         /// 外部人员管理，唤醒阶段的事件
         /// </summary>

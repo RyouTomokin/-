@@ -4,6 +4,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Playables;
 using Tomokin;
+using UnityEngine.UI;
 
 namespace Peixi
 {
@@ -33,11 +34,11 @@ namespace Peixi
         /// <summary>
         /// 拒绝接受贿赂
         /// </summary>
-        public event Action rejectBribe;
+        public event Action<string> rejectBribe;
         /// <summary>
         /// 同意接受贿赂
         /// </summary>
-        public event Action approveBribe;
+        public event Action<string> approveBribe;
         /// <summary>
         /// 收到线上玩家的贿赂请求消息
         /// </summary>
@@ -49,7 +50,7 @@ namespace Peixi
         /// <summary>
         /// 收到贿赂请求处理结果
         /// </summary>
-        public event Action<bool> bribeRequestResultReceived;
+        public event Action<string,bool> bribeRequestResultReceived;
         // Start is called before the first frame update
         void Start()
         {
@@ -169,19 +170,34 @@ namespace Peixi
         {
             if (approveBribe != null)
             {
-                approveBribe.Invoke();
+                string name = FindObjectOfType<PlayerInformation>().playerName;
+                approveBribe.Invoke(name);
             }
         }
         public void InvokeRejectBribe()
         {
             if (rejectBribe != null)
             {
-                rejectBribe.Invoke();
+                string name = FindObjectOfType<PlayerInformation>().playerName;
+                rejectBribe.Invoke(name);
             }
         }
         public void InvokeBribeRequestResultReceived(bool m_result)
         {
-            bribeRequestResultReceived.Invoke(m_result);
+            if (bribeRequestResultReceived != null)
+            {
+                bribeRequestResultReceived.Invoke(m_name, m_result);
+                bribeResultFrame.SetActive(true);
+                var content = bribeResultFrame.GetComponentInChildren<Text>();
+                if (m_result)
+                {
+                    content.text = m_name + "同意了你的请求";
+                }
+                else
+                {
+                    content.text = m_name + "拒绝了你的请求";
+                }
+            }
         }
         #endregion
 
@@ -234,6 +250,11 @@ namespace Peixi
         }
         #endregion
 
+        public void StartRound()
+        {
+ 
+        }
+
         /// <summary>
         /// 时间到或者按下结束按钮
         /// </summary>
@@ -241,7 +262,6 @@ namespace Peixi
         {
             print("结束准备阶段，等待其他玩家");
         }
-
         void PlayStateEndAnim()
         {
             director.time -= Time.deltaTime;

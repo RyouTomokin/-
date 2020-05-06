@@ -18,14 +18,15 @@ namespace Tomokin
         }
         public void RessiveMsg(string msg)
         {
+            if (msg == "") return;
             Show.text += "\n" + msg;
+            scro.verticalNormalizedPosition = -1f;
         }
 
         public void SendMsg(string msg)
         {
             Input.text = "";
             Net.SendChat(msg);
-            scro.verticalNormalizedPosition = -0.1f;
         }
     }
 }

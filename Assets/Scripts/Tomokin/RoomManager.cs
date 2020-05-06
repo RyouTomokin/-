@@ -18,7 +18,6 @@ namespace Tomokin
 
         public void JoinRoom(string name)
         {
-            TomokinNet.PlayersInRoom.Add(name);
             foreach (var P in PlayerMsg)
             {
                 if (!P.activeSelf)
@@ -38,7 +37,6 @@ namespace Tomokin
 
         public void LeaveRoom(string name)
         {
-            TomokinNet.PlayersInRoom.Remove(name);
             foreach (var P in PlayerMsg)
             {
                 if (P.GetComponentInChildren<Text>().text == name)
@@ -74,7 +72,7 @@ namespace Tomokin
             {
                 PD[i] = new PlayerGameData(names[i], i, ishouseowner);
                 CilentManager.PDs[i] = PD[i];
-                if (names[i] == CilentManager.PlayerName)
+                if (names[i] == CilentManager.PlayerName+CilentManager.PlayerID)
                     CilentManager.PlayerNum = i;
             }
             if (ishouseowner)
@@ -86,7 +84,7 @@ namespace Tomokin
             GameManager.Instance.Roll();
 
             //进入准备阶段
-            //FindObjectOfType<PrepareStateEvent>().RoundStartInvoke();
+            FindObjectOfType<PrepareStateEvent>().RoundStartInvoke();
         }
     }
 }

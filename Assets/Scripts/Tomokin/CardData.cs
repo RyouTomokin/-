@@ -32,6 +32,10 @@ namespace Tomokin
         {
             get { return RGB[2]; }
         }
+        public int GetByNum(int n)
+        {
+            return RGB[n];
+        }
         public int GetPreference
         {
             get { return (int)pref; }

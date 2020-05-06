@@ -18,7 +18,7 @@ namespace Peixi
         public static PlayerInformation instance;
         protected int chip = 2;
         protected int gcoin = 2;
-        protected string playerName = "Player1";
+        public string playerName = "Player1";
         public int Chip
         {
             get { return chip; }
@@ -42,7 +42,7 @@ namespace Peixi
         }
         void OnRoundStart()
         {
-            print("PlayerInformation connect well");
+            //print("PlayerInformation connect well");
         }
         void OnRollCard()
         {
@@ -50,7 +50,7 @@ namespace Peixi
             Text chipLabel = players[0].transform.Find("chip").GetComponent<Text>();
             chipLabel.text = chip.ToString();
         }
-        void OnBribeRequestResultReceived(bool m_result)
+        void OnBribeRequestResultReceived(string m_name,bool m_result)
         {
             if (m_result)
             {
@@ -59,7 +59,7 @@ namespace Peixi
                 coinLabel.text = gcoin.ToString();
             }
         }
-        void OnAcceptBribeButtonPressed()
+        void OnAcceptBribeButtonPressed(string name)
         {
             gcoin += 2;
             Text coinLabel = players[0].transform.Find("gcoin").GetComponent<Text>();
@@ -82,6 +82,10 @@ namespace Peixi
             }
             chip = data[0].chip;
             gcoin = data[0].coin;
+        }
+        public void UpdatePlayerData(PlayerData data)
+        {
+            
         }
     }
 }

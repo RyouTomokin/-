@@ -12,8 +12,24 @@ namespace Peixi
     {
         public string name;
         public string action;
-        public string card1;
-        public string card2;
+        public int card1;
+        public int card2;
+
+        public Bill(string n, string a, int c1, int c2)
+        {
+            name = n;
+            action = a;
+            card1 = c1;
+            card2 = c2;
+        }
+    }
+    /// <summary>
+    /// 记录投票结果
+    /// </summary>
+    public struct Vote
+    {
+        public float negativeVote;
+        public float positiveVote;
     }
     /// <summary>
     /// 记录投票结果
@@ -40,17 +56,25 @@ namespace Peixi
         /// </summary>
         public event Action onVoteRoundEnd;
         /// <summary>
-        /// 投下赞成票事件
+        /// 投票开始
         /// </summary>
-        public event Action onAgreeVoteSent;
+        public event Action onVoteRoundStart;
         /// <summary>
-        /// 投下反对票事件
+        /// 投票结束
         /// </summary>
-        public event Action onDisagreeVoteSent;
+        public event Action onVoteRoundEnd;
+        /// <summary>
+        /// 投票事件
+        /// </summary>
+        public event Action<bool> onVoteSent;
         /// <summary>
         /// 使用额外一票事件
         /// </summary>
-        public event Action onUseTicket;
+        public event Action<bool> onUseTicket;
+        /// <summary>
+        /// 不使用额外一票
+        /// </summary>
+        public event Action onNotUseTicket;
         /// <summary>
         /// 不使用额外一票
         /// </summary>
@@ -126,28 +150,27 @@ namespace Peixi
                 StartCoroutine(VoteInterval());
             }
         }
-        public void InvokeAgreeProposal()
+        public void InvokeVoteSent(bool m_vote)
         {
             print("投下赞成票");
-            if (onAgreeVoteSent != null)
+            if (onVoteSent != null)
             {
-                onAgreeVoteSent.Invoke();
+                onVoteSent.Invoke(m_vote);
             }      
         }
-        public void InvokeDisagreeProposal()
-        {
-            print("投下反对票");
-            if (onDisagreeVoteSent != null)
-            {
-                onDisagreeVoteSent.Invoke();
-            }
-        }
-        public void InvokeUseTicket()
+        public void InvokeUseTicket(bool m_useTicket)
         {
             print("使用额外一票");
             if (onUseTicket != null)
             {
-                onUseTicket.Invoke();
+                onUseTicket.Invoke(m_useTicket);
+            }
+        }
+        public void InvokeShowVoteResult(Vote m_vote)
+        {
+            if (onShowVoteResult != null)
+            {
+                onShowVoteResult.Invoke(m_vote);
             }
         }
         public void InvokeShowVoteResult(Vote m_vote)

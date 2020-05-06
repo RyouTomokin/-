@@ -32,6 +32,8 @@ namespace Tomokin
             IsHouseOwner = isowner;
         }
 
+        public int SetMoney { set => Money = value; }
+
         public int GetMoney
         {
             get { return Money; }
@@ -48,6 +50,8 @@ namespace Tomokin
             if (Money - m >= 0) return true;
             else return false;
         }
+
+        public int SetChip { set => Chip = value; }
         public int GetChip
         {
             get { return Chip; }
@@ -68,7 +72,7 @@ namespace Tomokin
 
         //投票，判断被贿赂情况
         
-        public double GetScore
+        public float GetScore
         {
             get { return Money + (Chip * 1.5); }
         }
