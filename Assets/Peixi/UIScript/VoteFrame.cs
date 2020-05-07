@@ -20,10 +20,6 @@ namespace Peixi
             voteState.onVoteRoundStart += OnVoteRoundStart;
             voteState.onVoteRoundEnd += OnVoteRoundEnd;
         }
-        private void Start()
-        {
-            Utility.AcitveAllChildren(transform, false);
-        }
         void OnVoteRoundStart()
         {
             List<Bill> bills = voteState.PlayerBills;
@@ -45,18 +41,6 @@ namespace Peixi
             voteRound = 0;
             Utility.AcitveAllChildren(transform, false);
         }
-        void OnVoteRoundStart()
-        {
-            voteState.InvokeAgreeProposal();
-            Utility.AcitveAllChildren(transform, false);
-        }
-        void OnVoteRoundEnd()
-        {
-            voteState.InvokeDisagreeProposal();
-            Utility.AcitveAllChildren(transform, false);
-        }
-
-
     }
 }
     

@@ -3,22 +3,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Peixi;
+using Tomokin;
 
 public class Test : MonoBehaviour
 {
-    public Func<string> testFunc;
-    static Test instance;
+
+    public Func<string> bribe = new Func<string>(BribePlayer);
     // Start is called before the first frame update
     void Start()
     {
-        instance = this;
-        testFunc += Test1;
-        print(testFunc());
+        string n = Tomokin.CilentManager.playerdata.PlayerName;
+        print(n);
     }
-    string Test1()
+    static string BribePlayer()
     {
-        print("test well");
-        return "Plyaer1";
+        print(11);
+        return "Alice";
     }
-
+    string Receive()
+    {
+        print(bribe());
+        return null;
+    }
 }

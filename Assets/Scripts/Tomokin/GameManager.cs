@@ -353,7 +353,7 @@ namespace Tomokin
             pd.chip = CilentManager.playerdata.GetChip;
             pd.coin = CilentManager.playerdata.GetMoney;
             pd.name = CilentManager.PlayerName;
-            FindObjectOfType<PlayerInformation>().UpdatePlayerData(pd);
+            //FindObjectOfType<PlayerInformation>().UpdatePlayerData(pd);
         }
 
         public void SendVote(float poll)
@@ -450,8 +450,8 @@ namespace Tomokin
             //订阅
             prepare.onRollCard += Roll;   //监听换牌按钮
             prepare.bribeMessageSent += SendBrideMsg; //监听发送贿赂请求按钮
-            prepare.approveBribe += BeBribe;
-            prepare.rejectBribe += NoteBribe;
+            //prepare.approveBribe += BeBribe;
+            //prepare.rejectBribe += NoteBribe;
             FindObjectOfType<NegociateState>().onAgreeBuyTicket += BuyExVote;
             FindObjectOfType<VoteState>().onVoteSent += SendVote;
             FindObjectOfType<VoteState>().onUseTicket += SendExvote;

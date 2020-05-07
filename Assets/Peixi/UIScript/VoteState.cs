@@ -14,22 +14,13 @@ namespace Peixi
         public string action;
         public int card1;
         public int card2;
-
-        public Bill(string n, string a, int c1, int c2)
+        public Bill(string m_name,string m_action,int m_card1,int m_card2)
         {
-            name = n;
-            action = a;
-            card1 = c1;
-            card2 = c2;
+            name = m_name;
+            action = m_action;
+            card1 = m_card1;
+            card2 = m_card2;
         }
-    }
-    /// <summary>
-    /// 记录投票结果
-    /// </summary>
-    public struct Vote
-    {
-        public float negativeVote;
-        public float positiveVote;
     }
     /// <summary>
     /// 记录投票结果
@@ -46,15 +37,12 @@ namespace Peixi
     public class VoteState : RoundState
     {
         [SerializeField]
-        protected GameObject voteFrame;
-        /// <summary>
-        /// 投票开始
-        /// </summary>
-        public event Action onVoteRoundStart;
-        /// <summary>
-        /// 投票结束
-        /// </summary>
-        public event Action onVoteRoundEnd;
+        GameObject voteFrame;
+        [SerializeField]
+        GameObject useExTicketFrame;
+        [SerializeField]
+        GameObject voteResultFrame;
+        
         /// <summary>
         /// 投票开始
         /// </summary>
@@ -72,14 +60,6 @@ namespace Peixi
         /// </summary>
         public event Action<bool> onUseTicket;
         /// <summary>
-        /// 不使用额外一票
-        /// </summary>
-        public event Action onNotUseTicket;
-        /// <summary>
-        /// 不使用额外一票
-        /// </summary>
-        public event Action onNotUseTicket;
-        /// <summary>
         /// 展示投票结果
         /// </summary>
         public event Action<Vote> onShowVoteResult;
@@ -92,12 +72,10 @@ namespace Peixi
         }
         private void Start()
         {
-            //regist state events
-            RegisterEvent("onNotUseTicket",onNotUseTicket);
-            //
+            gameObject.SetActive(false);
+
             onRoundStarted += OnRoundStart;
             onRoundEnded += OnRoundEnd;
-            onNotUseTicket += onNotUseTicket;
         }
         protected override void OnRoundStart()
         {
@@ -109,14 +87,15 @@ namespace Peixi
         {
             base.OnRoundEnd();
             print("结束投票阶段，等待其他玩家");
-            onVoteRoundEnd.Invoke();
-            StartCoroutine(RoundInterval());
+            voteFrame.SetActive(false);
+            voteResultFrame.SetActive(false);
+            useExTicketFrame.SetActive(false);
         }
         /// <summary>
         /// 服务器开始投票回合
         /// </summary>
         /// <param name="m_playerBills">所有玩家的提案</param>
-        public void StartRound(List<Bill> m_playerBills)
+        public void RoundStartInvoke(List<Bill> m_playerBills)
         {
             playerBills = m_playerBills;
             StartVoteRound();
@@ -152,9 +131,14 @@ namespace Peixi
         }
         public void InvokeVoteSent(bool m_vote)
         {
-            print("投下赞成票");
+            //print("投下赞成票");
             if (onVoteSent != null)
             {
+                var m_playerInfomation = FindObjectOfType<PlayerInformation>();
+                if (m_playerInfomation.HaveExTicket)
+                {
+                    useExTicketFrame.SetActive(true);
+                }
                 onVoteSent.Invoke(m_vote);
             }      
         }
@@ -166,29 +150,15 @@ namespace Peixi
                 onUseTicket.Invoke(m_useTicket);
             }
         }
+        /// <summary>
+        /// 服务器显示投票结果
+        /// </summary>
+        /// <param name="m_vote"></param>
         public void InvokeShowVoteResult(Vote m_vote)
         {
             if (onShowVoteResult != null)
             {
                 onShowVoteResult.Invoke(m_vote);
-            }
-        }
-        public void InvokeShowVoteResult(Vote m_vote)
-        {
-            if (onShowVoteResult != null)
-            {
-                onShowVoteResult.Invoke(m_vote);
-            }
-        }
-        public void InvokeNotUseTicket()
-        {
-            if (onNotUseTicket!=null)
-            {
-                onNotUseTicket.Invoke();
-            }
-            else
-            {
-                Debug.LogWarning("onNotUseTicket is empty");
             }
         }
         public void InvokeVoteRoundEnd()
@@ -211,11 +181,6 @@ namespace Peixi
         {
             yield return new WaitForSeconds(1.5f);
             StartVoteRound();
-        }
-
-        void NotUseTicket()
-        {
-            print("NotUseTicket");
         }
     }
 }

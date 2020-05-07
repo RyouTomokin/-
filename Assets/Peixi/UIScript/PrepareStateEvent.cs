@@ -18,6 +18,7 @@ namespace Peixi
         public GameObject bribeButton;
         public GameObject bribeMessageFrame;
         public GameObject bribeWarnFrame;
+        public GameObject bribeResultFrame;
 
         delegate void EmptyEngine();
         EmptyEngine engine;
@@ -34,11 +35,11 @@ namespace Peixi
         /// <summary>
         /// 拒绝接受贿赂
         /// </summary>
-        public event Action<string> rejectBribe;
+        public event Action rejectBribe;
         /// <summary>
         /// 同意接受贿赂
         /// </summary>
-        public event Action<string> approveBribe;
+        public event Action approveBribe;
         /// <summary>
         /// 收到线上玩家的贿赂请求消息
         /// </summary>
@@ -110,18 +111,12 @@ namespace Peixi
      
             
         }
-        public void OnDealPlayer1ButtonPressed()
+        public void OnDealPlayerButtonPressed(int playerNum)
         {
             inquireBribeFrame.SetActive(true);
             dealOnlinePlayer1Button.SetActive(false);
             dealOnlinePlayer2Button.SetActive(false);
-            bribeMessageSent.Invoke((CilentManager.PlayerNum + 1) % 3);
-        }
-        public void OnDealPlayer2ButtonPressed()
-        {
-            inquireBribeFrame.SetActive(true);
-            dealOnlinePlayer1Button.SetActive(false);
-            dealOnlinePlayer2Button.SetActive(false);
+            bribeMessageSent.Invoke(playerNum);
         }
         public void OnConfirmBribeButtonPressed()
         {
@@ -130,16 +125,16 @@ namespace Peixi
             bribeButton.SetActive(true);
             //调用贿赂的底层逻辑（需要知道被贿赂的对象）
         }
-        public void OnCancelBribeButtonPressed()
-        {
-            print("cancel bribe button press");
-            inquireBribeFrame.SetActive(false);
-            bribeButton.SetActive(true);
-        }
-        public void ShutDownBribeWarnFrame()
-        {
-            bribeWarnFrame.SetActive(false);
-        }
+        //public void OnCancelBribeButtonPressed()
+        //{
+        //    print("cancel bribe button press");
+        //    inquireBribeFrame.SetActive(false);
+        //    bribeButton.SetActive(true);
+        //}
+        //public void ShutDownBribeWarnFrame()
+        //{
+        //    bribeWarnFrame.SetActive(false);
+        //}
         /// <summary>
         /// 服务器向本地玩家发送BribeMessage
         /// </summary>
@@ -170,19 +165,22 @@ namespace Peixi
         {
             if (approveBribe != null)
             {
-                string name = FindObjectOfType<PlayerInformation>().playerName;
-                approveBribe.Invoke(name);
+                approveBribe.Invoke();
             }
         }
         public void InvokeRejectBribe()
         {
             if (rejectBribe != null)
             {
-                string name = FindObjectOfType<PlayerInformation>().playerName;
-                rejectBribe.Invoke(name);
+                rejectBribe.Invoke();
             }
         }
-        public void InvokeBribeRequestResultReceived(bool m_result)
+        /// <summary>
+        /// 服务器回答贿赂请求结果
+        /// </summary>
+        /// <param name="m_name">受贿人的名字</param>
+        /// <param name="m_result">受贿结果</param>
+        public void InvokeBribeRequestResultReceived(string m_name,bool m_result)
         {
             if (bribeRequestResultReceived != null)
             {
