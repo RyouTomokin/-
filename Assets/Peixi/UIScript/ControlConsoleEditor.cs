@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using Peixi;
+using Tomokin;
 
 [CustomEditor(typeof(ControlConsole))]
 public class ControlConsoleEditor : Editor
@@ -46,7 +47,19 @@ public class ControlConsoleEditor : Editor
             }
             if (GUILayout.Button("从服务器更新玩家信息"))
             {
-                FindObjectOfType<PlayerInformation>().UpdatePlayerData(datas);
+                Debug.Log("从服务器更新玩家信息");
+                List<PlayerGameData> playerData = new List<Tomokin.PlayerGameData>();
+                PlayerGameData data1 = new PlayerGameData("Alice", 0, false);
+                PlayerGameData data2 = new PlayerGameData("Bob", 1, false);
+                PlayerGameData data3 = new PlayerGameData("Cindy", 2, false);
+                playerData.Add(data1);
+                playerData.Add(data2);
+                playerData.Add(data3);
+                //for (int i = 0; i < playerData.Count; i++)
+                //{
+                //    Debug.Log(i + playerData[i].PlayerName + playerData[i].Number);
+                //}
+                FindObjectOfType<PlayerInformation>().UpdatePlayerData(playerData);
             }
             if (GUILayout.Button("在线玩家1发送悄悄话"))
             {

@@ -39,20 +39,23 @@ namespace Peixi
         GameObject[] players;//3 players' UI gameobject
         Dictionary<string, PlayerData> playerData = new Dictionary<string, PlayerData>();
 
+       
+
         public static PlayerInformation instance;
         protected int chip = 2;
-        protected int gcoin = 2;
+        //protected int gcoin = 2;
         protected string clientPlayer = "Player1";
         protected bool bribed;
         protected bool haveExTicket;
+
+        //test code
+        int clientNum = 0;
+        List<PlayerGameData> datas = new List<PlayerGameData>();
         public int Chip
         {
             get { return chip; }
         }
-        public int Gcoin
-        {
-            get { return gcoin; }
-        }
+ 
         public bool Bribed
         {
             get { return bribed; }
@@ -71,6 +74,7 @@ namespace Peixi
             prepare.onRollCard += OnRollCard;
             prepare.approveBribe += OnAcceptBribeButtonPressed;
             prepare.bribeRequestResultReceived += OnBribeRequestResultReceived;
+
         }
         //initialize settings
         void OnRoundStart()
@@ -90,22 +94,20 @@ namespace Peixi
         {
             if (m_result)
             {
-                gcoin -= 2;
+                int m_coin = Tomokin.CilentManager.playerdata.GetMoney;
                 Text coinLabel = players[0].transform.Find("chip").GetComponent<Text>();
-                coinLabel.text = gcoin.ToString();
+                coinLabel.text = m_coin.ToString();
             }
         }
         void OnAcceptBribeButtonPressed()
         {
-            playerData[clientPlayer].ChangeCoin(2);
-            UpdateUI();
-            //gcoin += 2;
-            //Text coinLabel = players[0].transform.Find("gcoin").GetComponent<Text>();
-            //coinLabel.text = gcoin.ToString();
-            //bribed = true;
+            int m_coin = Tomokin.CilentManager.playerdata.GetChip;
+            Text coinLabel = players[0].transform.Find("gcoin").GetComponent<Text>();
+            coinLabel.text = m_coin.ToString();
+            bribed = true;
         }
         /// <summary>
-        /// 从服务器端更新所有玩家信息显示
+        /// 服务器端更新所有玩家信息显示
         /// </summary>
         /// <param name="data">默认data[0]是本地玩家</param>
         public void UpdatePlayerData(List<PlayerData> m_data)
@@ -119,15 +121,32 @@ namespace Peixi
             }
         }
         /// <summary>
-        /// 从服务器端更新一位玩家信息显示
+        /// 服务器端更新所有玩家信息显示
         /// </summary>
-        /// <param name="playerName"></param>
         /// <param name="m_data"></param>
-        public void UpdatePlayerDate(string m_playerName, PlayerData m_data)
+        public void UpdatePlayerData(List<PlayerGameData> m_data)
         {
-            playerData[m_playerName] = m_data;
-            UpdateUI();
+            var temp = m_data[clientNum];
+            //print(0 + m_data[0].PlayerName + m_data[0].Number);
+            m_data.RemoveAt(clientNum);
+         
+            m_data.Insert(0,temp);
+            //for (int i = 0; i < m_data.Count; i++)
+            //{
+            //    Debug.Log(i + m_data[i].PlayerName + m_data[i].Number);
+            //}
+            for (int i = 0; i < 3; i++)
+            {
+                Text name = players[i].transform.Find("name").GetComponent<Text>();
+                Text chip = players[i].transform.Find("chip").GetComponent<Text>();
+                Text coin = players[i].transform.Find("gcoin").GetComponent<Text>();
+
+                name.text = m_data[i].PlayerName;
+                chip.text = m_data[i].GetChip.ToString();
+                coin.text = m_data[i].GetMoney.ToString();
+            }
         }
+
         void UpdateUI()
         {
             for (int i = 0; i < 3; i++)

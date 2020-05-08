@@ -91,7 +91,7 @@ namespace Peixi
         #region//Bribe
         public void OnBribeButtonPressed()
         {
-            int coin = PlayerInformation.instance.Chip;
+            int coin = Tomokin.CilentManager.playerdata.GetMoney;
             if (coin >= 2)
             {
                 //print("点击了贿赂按钮");
@@ -108,8 +108,6 @@ namespace Peixi
             {
                 bribeWarnFrame.SetActive(true);
             }
-     
-            
         }
         public void OnDealPlayerButtonPressed(int playerNum)
         {
@@ -206,9 +204,9 @@ namespace Peixi
         public void OnRollCardButtonPressed()
         {
             //print("press roll card button");
-            PlayerInformation playerInformation = FindObjectOfType<PlayerInformation>();
+            var chip = Tomokin.CilentManager.playerdata.GetChip;
             //print(playerInformation.Chip);
-            if (playerInformation.Chip >= 2)
+            if (chip >= 2)
             {
                 rollCardButton.SetActive(false);
                 inquireRollCardFrame.SetActive(true);
