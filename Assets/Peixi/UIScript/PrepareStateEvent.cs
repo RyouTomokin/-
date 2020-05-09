@@ -46,16 +46,21 @@ namespace Peixi
         public event Action<string> bribeMessageReceived;
         /// <summary>
         /// 向其他玩家发送贿赂请求
+        /// 参数1：受贿人名字
+        /// 参数2：行贿人名字
         /// </summary>
-        public event Action<int> bribeMessageSent;
+        public event Action<string,string> bribeMessageSent;
         /// <summary>
         /// 收到贿赂请求处理结果
         /// </summary>
         public event Action<string,bool> bribeRequestResultReceived;
+
+        PlayerInformation info ;
         // Start is called before the first frame update
         void Start()
         {
             director = GetComponent<PlayableDirector>();
+            info = FindObjectOfType<PlayerInformation>();
             onRoundStarted += OnRoundStart;
             onRoundEnded += OnRoundEnd;
         }
@@ -91,7 +96,8 @@ namespace Peixi
         #region//Bribe
         public void OnBribeButtonPressed()
         {
-            int coin = Tomokin.CilentManager.playerdata.GetMoney;
+            //int coin = Tomokin.CilentManager.playerdata.GetMoney;
+            int coin = 5;
             if (coin >= 2)
             {
                 //print("点击了贿赂按钮");
@@ -114,7 +120,20 @@ namespace Peixi
             inquireBribeFrame.SetActive(true);
             dealOnlinePlayer1Button.SetActive(false);
             dealOnlinePlayer2Button.SetActive(false);
-            bribeMessageSent.Invoke(playerNum);
+            //bribeMessageSent.Invoke(playerNum);
+
+            string bribeTaker = info.Datas[playerNum].PlayerName;
+            string briber = info.Datas[0].PlayerName;
+            print(briber + "向" + bribeTaker + "发送贿赂请求");
+            if (bribeMessageSent != null)
+            {
+                bribeMessageSent.Invoke(bribeTaker, briber);
+            }
+            else
+            {
+                Debug.LogWarning("bribeMessageSent没有订阅者");
+            }
+           
         }
         public void OnConfirmBribeButtonPressed()
         {

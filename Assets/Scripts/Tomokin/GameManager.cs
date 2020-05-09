@@ -449,7 +449,7 @@ namespace Tomokin
             prepare = FindObjectOfType<PrepareStateEvent>();
             //订阅
             prepare.onRollCard += Roll;   //监听换牌按钮
-            prepare.bribeMessageSent += SendBrideMsg; //监听发送贿赂请求按钮
+            //prepare.bribeMessageSent += SendBrideMsg; //监听发送贿赂请求按钮
             //prepare.approveBribe += BeBribe;
             //prepare.rejectBribe += NoteBribe;
             FindObjectOfType<NegociateState>().onAgreeBuyTicket += BuyExVote;

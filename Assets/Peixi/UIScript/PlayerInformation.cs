@@ -5,6 +5,7 @@ using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.UI;
 using Tomokin;
+using System;
 
 namespace Peixi
 {
@@ -39,6 +40,8 @@ namespace Peixi
         GameObject[] players;//3 players' UI gameobject
         Dictionary<string, PlayerData> playerData = new Dictionary<string, PlayerData>();
 
+        List<PlayerGameData> data = new List<PlayerGameData>();
+        public event Action onGameStartInit;
         public static PlayerInformation instance;
         protected int chip = 2;
         //protected int gcoin = 2;
@@ -53,7 +56,6 @@ namespace Peixi
         {
             get { return chip; }
         }
- 
         public bool Bribed
         {
             get { return bribed; }
@@ -61,6 +63,10 @@ namespace Peixi
         public bool HaveExTicket
         {
             get { return haveExTicket; }
+        }
+        public List<PlayerGameData> Datas
+        {
+            get { return data; }
         }
         PrepareStateEvent prepare;
         // Start is called before the first frame update
@@ -107,20 +113,6 @@ namespace Peixi
         /// <summary>
         /// 服务器端更新所有玩家信息显示
         /// </summary>
-        /// <param name="data">默认data[0]是本地玩家</param>
-        public void UpdatePlayerData(List<PlayerData> m_data)
-        {
-            for (int i = 0; i < 3; i++)
-            {
-                //storge data
-                playerData[m_data[i].name] = m_data[i];
-                //updateUI
-                UpdateUI();
-            }
-        }
-        /// <summary>
-        /// 服务器端更新所有玩家信息显示
-        /// </summary>
         /// <param name="m_data"></param>
         public void UpdatePlayerData(List<PlayerGameData> m_data)
         {
@@ -129,9 +121,11 @@ namespace Peixi
             m_data.RemoveAt(clientNum);
          
             m_data.Insert(0,temp);
-            //for (int i = 0; i < m_data.Count; i++)
+          
+            data = m_data;
+            //for (int i = 0; i < data.Count; i++)
             //{
-            //    Debug.Log(i + m_data[i].PlayerName + m_data[i].Number);
+            //    Debug.Log(i + data[i].PlayerName + m_data[i].Number);
             //}
             for (int i = 0; i < 3; i++)
             {
@@ -144,7 +138,19 @@ namespace Peixi
                 coin.text = m_data[i].GetMoney.ToString();
             }
         }
-
+        /// <summary>
+        /// 服务器端更新所有玩家信息显示
+        /// </summary>
+        /// <param name="m_data"></param>
+        public void UpdatePlayerData(PlayerGameData[] m_data)
+        {
+            List<PlayerGameData> temp = new List<PlayerGameData>();
+            for (int i = 0; i < m_data.Length; i++)
+            {
+                temp.Add(m_data[i]);
+            }
+            UpdatePlayerData(temp);
+        }
         void UpdateUI()
         {
             for (int i = 0; i < 3; i++)

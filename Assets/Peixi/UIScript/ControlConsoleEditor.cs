@@ -41,11 +41,7 @@ public class ControlConsoleEditor : Editor
         showPrepareStateButton = EditorGUILayout.Foldout(showPrepareStateButton, "准备阶段", true);
         if (showPrepareStateButton)
         {
-            if (GUILayout.Button("开始准备阶段"))
-            {
-                prepare.RoundStartInvoke();
-            }
-            if (GUILayout.Button("从服务器更新玩家信息"))
+            if (GUILayout.Button("初始化游戏"))
             {
                 Debug.Log("从服务器更新玩家信息");
                 List<PlayerGameData> playerData = new List<Tomokin.PlayerGameData>();
@@ -60,6 +56,10 @@ public class ControlConsoleEditor : Editor
                 //    Debug.Log(i + playerData[i].PlayerName + playerData[i].Number);
                 //}
                 FindObjectOfType<PlayerInformation>().UpdatePlayerData(playerData);
+            }
+            if (GUILayout.Button("开始准备阶段"))
+            {
+                prepare.RoundStartInvoke();
             }
             if (GUILayout.Button("在线玩家1发送悄悄话"))
             {
