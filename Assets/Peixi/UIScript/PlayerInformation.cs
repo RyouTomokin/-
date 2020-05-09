@@ -39,8 +39,6 @@ namespace Peixi
         GameObject[] players;//3 players' UI gameobject
         Dictionary<string, PlayerData> playerData = new Dictionary<string, PlayerData>();
 
-       
-
         public static PlayerInformation instance;
         protected int chip = 2;
         //protected int gcoin = 2;
@@ -99,7 +97,7 @@ namespace Peixi
                 coinLabel.text = m_coin.ToString();
             }
         }
-        void OnAcceptBribeButtonPressed()
+        void OnAcceptBribeButtonPressed(string name)
         {
             int m_coin = Tomokin.CilentManager.playerdata.GetChip;
             Text coinLabel = players[0].transform.Find("gcoin").GetComponent<Text>();
@@ -159,6 +157,10 @@ namespace Peixi
                 gcoin.text = playerData[name].coin.ToString();
             }
         }
+        public void GameStartInit()
+        {
+            
+        }   
     }
    
 }

@@ -8,7 +8,7 @@ namespace Peixi
     {
         PrepareStateEvent prepareState;
         Animation anim;
-        public string playerName;
+        string bribeTaker;
         public int playerNum;
         private void Start()
         {
@@ -19,7 +19,9 @@ namespace Peixi
         }
         void OnBribeMessageReceived(string player)
         {
-            if (player==playerName)
+
+            bribeTaker = player;
+            if (player== bribeTaker)
             {
                 Utility.AcitveAllChildren(transform, true);
             }
@@ -28,13 +30,15 @@ namespace Peixi
         }
         public void OnApproveButtonPressed()
         {
-            prepareState.InvokeApproveBribe();
+            string m_name = Tomokin.CilentManager.playerdata.PlayerName;
+            prepareState.InvokeApproveBribe(bribeTaker);
             Utility.AcitveAllChildren(transform, false);
         }
         public void OnRejectButtonPressed()
         {
+            string m_name = Tomokin.CilentManager.playerdata.PlayerName;
             //print("reject bribe button pressed");
-            prepareState.InvokeRejectBribe();
+            prepareState.InvokeRejectBribe(bribeTaker);
             Utility.AcitveAllChildren(transform, false);
         }
     }

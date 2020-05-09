@@ -35,11 +35,11 @@ namespace Peixi
         /// <summary>
         /// 拒绝接受贿赂
         /// </summary>
-        public event Action rejectBribe;
+        public event Action<string> rejectBribe;
         /// <summary>
         /// 同意接受贿赂
         /// </summary>
-        public event Action approveBribe;
+        public event Action<string> approveBribe;
         /// <summary>
         /// 收到线上玩家的贿赂请求消息
         /// </summary>
@@ -159,18 +159,18 @@ namespace Peixi
                 }
             }
         }
-        public void InvokeApproveBribe()
+        public void InvokeApproveBribe(string name)
         {
             if (approveBribe != null)
             {
-                approveBribe.Invoke();
+                approveBribe.Invoke(name);
             }
         }
-        public void InvokeRejectBribe()
+        public void InvokeRejectBribe(string m_name)
         {
             if (rejectBribe != null)
             {
-                rejectBribe.Invoke();
+                rejectBribe.Invoke(m_name);
             }
         }
         /// <summary>

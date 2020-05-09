@@ -12,8 +12,7 @@ public class Test : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        string n = Tomokin.CilentManager.playerdata.PlayerName;
-        print(n);
+        //string n = Tomokin.CilentManager.playerdata.PlayerName;
     }
     static string BribePlayer()
     {
