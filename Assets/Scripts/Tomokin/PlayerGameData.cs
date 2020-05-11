@@ -74,7 +74,7 @@ namespace Tomokin
         
         public float GetScore
         {
-            get { return Money + (Chip * 1.5); }
+            get { return Money + (Chip * 1.5f); }
         }
 
         public void TanChuang(string s)

@@ -9,7 +9,7 @@ public class ServerSimulation : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        FindObjectOfType<PrepareStateEvent>().bribeMessageSent += ReceiveBribe;
+        //FindObjectOfType<PrepareStateEvent>().bribeMessageSent += ReceiveBribe;
     }
     void ReceiveBribe(int num)
     {

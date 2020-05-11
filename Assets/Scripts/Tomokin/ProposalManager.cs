@@ -58,7 +58,9 @@ namespace Tomokin
                 {
                     Proposal prop = new Proposal(inbook, GameManager.Instance.CardsInLibarary[handcard],
                                                     GameManager.Instance.CardsInLibarary[bookcard], pd);
-                    ProposalManager.PropsofthisTurn.Add(prop);
+                    if (PropsofthisTurn == null)
+                        PropsofthisTurn = new List<Proposal>();
+                    PropsofthisTurn.Add(prop);
                     break;
                 }
             }

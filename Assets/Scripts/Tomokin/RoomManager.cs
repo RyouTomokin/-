@@ -60,31 +60,44 @@ namespace Tomokin
             GameStartInit(TomokinNet.PlayersInRoom, true);
         }
         
-        public void GameStartInit(List<string> names, bool ishouseowner)
+        public void GameStartInit(List<string> names, bool ishouseowner, bool isNetGame = true)
         {
-            this.gameObject.SetActive(false);
             foreach (var scene in GameScenes)
             {
                 scene.SetActive(true);
             }
+            GameManager GM = GameManager.Instance;
             //生成3个玩家的数据类
             for (int i = 0; i < names.Count; i++)
             {
                 PD[i] = new PlayerGameData(names[i], i, ishouseowner);
                 CilentManager.PDs[i] = PD[i];
-                if (names[i] == CilentManager.PlayerName+CilentManager.PlayerID)
+                if (names[i] == CilentManager.PlayerName + CilentManager.PlayerID)
+                {
+                    CilentManager.playerdata = PD[i];
                     CilentManager.PlayerNum = i;
+                }
             }
+            GM.UpdateUIMsg();
             if (ishouseowner)
             {
                 int[] n = HouseOwner.AgreementInit();
-                Net.InitAgreement(n[0], n[1]);
+                if (isNetGame) Net.InitAgreement(n[0], n[1]);
+                else//单机测试
+                {
+                    FindObjectOfType<BookManager>().Add_Card_To_Book(0, n[0]);
+                    FindObjectOfType<BookManager>().Add_Card_To_Book(1, n[1]);
+                }
             }
-
-            GameManager.Instance.Roll();
+            //给本地玩家换牌
+            GM.HCM.drop.value = GM.dropInRoom.value;
+            GM.Roll();
 
             //进入准备阶段
-            FindObjectOfType<PrepareStateEvent>().RoundStartInvoke();
+            PrepareStateEvent prepare = FindObjectOfType<PrepareStateEvent>();
+            Debug.Log(prepare);
+            prepare.RoundStartInvoke();
+            this.gameObject.SetActive(false);
         }
     }
 }

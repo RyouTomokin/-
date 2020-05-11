@@ -129,7 +129,9 @@ namespace Tomokin
                 Stages = 1;
                 AddTurns();
             }
-            StageDone = 0;
+            StageDone = 0;           
+            //单机测试
+            //GameManager.Instance.StartStage();
             Net.StartStep(Stages);
         }
         //返回一个时间倒计时

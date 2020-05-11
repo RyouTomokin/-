@@ -27,15 +27,16 @@ namespace Tomokin
                 Debug.Log("人数不对，进入游戏错误:" + PlayersInRoom.Count);
 
             }
-            int x = CilentManager.PlayerNum;
-            for (int i = 0; i < 3; i++)
-            {
-                Debug.Log(PlayersInRoom[x]);
+            //初始化玩家姓名
+            //int x = CilentManager.PlayerNum;
+            //for (int i = 0; i < 3; i++)
+            //{
+            //    Debug.Log(PlayersInRoom[x]);
 
-                GameManager.Instance.Player_Name_Text[i].GetComponent<Text>().text = OnlyName(PlayersInRoom[x]);
-                x = (x + 1) % 3;
-            }
-            Debug.Log(CilentManager.PlayerNum);
+            //    GameManager.Instance.Player_Name_Text[i].GetComponent<Text>().text = OnlyName(PlayersInRoom[x]);
+            //    x = (x + 1) % 3;
+            //}
+            //Debug.Log(CilentManager.PlayerNum);
 
         }
 
@@ -130,7 +131,6 @@ namespace Tomokin
                 Debug.Log(CilentManager.PlayerName + CilentManager.PlayerID);
                 if (AD.tar_player_nickname == CilentManager.PlayerName+CilentManager.PlayerID)
                 {
-                    //弹出贿赂请求窗口
                     Debug.Log("AD = " + AD.action_owner_nickname + "||" + CilentManager.PlayerName);
                     FindObjectOfType<GameManager>().ReceivedBrideMsg(AD.action_owner_nickname);
                 }
@@ -213,7 +213,8 @@ namespace Tomokin
                 {
                     pd.SetChip = chip;
                     pd.SetMoney = glod;
-                    FindObjectOfType<GameManager>().UpdateUI();
+                    FindObjectOfType<TextInputManager>().SendMsg("同步"+owner_nickname+"的信息");
+                    FindObjectOfType<GameManager>().UpdateUIMsg();
                 }
             }
         }

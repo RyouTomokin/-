@@ -11,12 +11,6 @@ namespace Peixi
         private void Start()
         {
             vote = FindObjectOfType<VoteState>();
-            //vote.onAgreeVoteSent += StartUseTicketFrame;
-            //vote.onDisagreeVoteSent += StartUseTicketFrame;
-        }
-        void StartUseTicketFrame()
-        {
-            Utility.AcitveAllChildren(transform);
         }
     }
 }
