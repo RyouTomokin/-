@@ -129,7 +129,7 @@ namespace Peixi
             dealOnlinePlayer2Button.SetActive(false);
             if (bribeMessageSent != null)
             {
-                bribeMessageSent.Invoke(playerNum);
+                //bribeMessageSent.Invoke(playerNum);
             }
             else
             {

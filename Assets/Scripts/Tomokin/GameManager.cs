@@ -555,7 +555,7 @@ namespace Tomokin
             //订阅
             //准备阶段
             prepare.onRollCard += Roll;   //监听换牌按钮
-            prepare.bribeMessageSent += SendBrideMsg; //监听发送贿赂请求按钮
+            //prepare.bribeMessageSent += SendBrideMsg; //监听发送贿赂请求按钮
             prepare.approveBribe += BeBribe;    //接收贿赂
             prepare.rejectBribe += NoteBribe;   //拒绝贿赂
 
