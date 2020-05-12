@@ -43,6 +43,10 @@ namespace Peixi
             }
             //StartCoroutine(RoundInterval());
         }
+        /// <summary>
+        /// 服务器开始提案阶段
+        /// </summary>
+        /// <param name="m_playerBills"></param>
         public void StartRound(List<Bill> m_playerBills)
         {
             exTicketFrame.SetActive(true);

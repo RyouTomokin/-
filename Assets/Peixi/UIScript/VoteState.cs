@@ -52,19 +52,18 @@ namespace Peixi
         /// </summary>
         public event Action onVoteRoundEnd;
         /// <summary>
-        /// 投票事件
+        /// 服务器接收投票结果
         /// </summary>
         public event Action<bool> onVoteSent;
         /// <summary>
-        /// 使用额外一票事件
+        /// 服务器接收使用额外一票事件
         /// </summary>
         public event Action<bool> onUseTicket;
         /// <summary>
-        /// 展示投票结果
+        /// 服务器展示投票结果
         /// </summary>
         public event Action<Vote> onShowVoteResult;
         int voteRound = 1;
-
         List<Bill> playerBills = new List<Bill>();
         public List<Bill> PlayerBills
         {
