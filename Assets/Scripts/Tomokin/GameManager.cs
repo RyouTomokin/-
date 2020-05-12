@@ -11,8 +11,6 @@ namespace Tomokin
     {
         public static GameManager Instance;
 
-        public List<GameObject> Player_Name_Text;
-
         public static int Turns;
         public static int Stages = 1;
 
@@ -23,10 +21,16 @@ namespace Tomokin
         public List<GameObject> CardsInBook;                        //协议书UI（按钮）
         private GameObject[] LockBook = new GameObject[2];          //被锁定的协议书槽
         public List<GameObject> CardsInHand;                        //手牌UI（按钮）
+        public Dropdown dropInRoom;                                 //在房间时的Dropdown
         private bool isNotNull = false;                             //标记，是否点击空白
         public CardMsg[] CM;                                        //所有的卡牌信息类
         public Text OutPut;                                         //打印提案显示
+
         private PrepareStateEvent prepare;
+        public Transform[] BillsCardUI;
+        public Transform[] BillsText;
+        public Transform CilentPlayer;
+        public Transform Player1, Player2;
 
         public void StartStage()
         {
@@ -34,8 +38,11 @@ namespace Tomokin
             //开启这回合的UI
             if (Stages == 3)
             {
+                //提案排序
                 ProposalManager.PropsofthisTurn = HouseOwner.PropSort(ProposalManager.PropsofthisTurn);
                 //展示这些提案
+                FindObjectOfType<NegociateState>().RoundStartInvoke();
+                //InputProposol();
             }
             if (Stages == 4)
             {
@@ -70,10 +77,12 @@ namespace Tomokin
         //倒计时结束或者操作结束时调用
         public void EndStage()
         {
+            //单机测试
+            //HouseOwner.AddJieDuan();
             Net.SendActionEndMessage();
         }
 
-        #region 生成提案(部分)
+        #region 提案(部分)
         /// <summary>
         /// 显示更换或删除卡牌的UI
         /// </summary>
@@ -105,7 +114,92 @@ namespace Tomokin
                 item.SetActive(false);
             }
         }
+
+        //向服务器提交自己的议案
+        public void SendMyProposal(Proposal myProp)
+        {
+            string tip = "";    //添加替换删除
+            StepTwoActionData AD = new StepTwoActionData(CilentManager.PlayerName + CilentManager.PlayerID,
+                2, tip, myProp.HandCard.Get_Order, myProp.InBook, myProp.BookCard.Get_Order,
+                CilentManager.PlayerName);
+            Net.SendAction(AD);
+        }
+        /// <summary>
+        /// 展示提案
+        /// </summary>
+        public void InputProposol()
+        {
+            int i = 0;
+            int type = 0;
+            foreach (var prop in ProposalManager.PropsofthisTurn)
+            {
+                CardMsg HC = BillsCardUI[i].Find("HandCard").GetComponent<CardMsg>();
+                CardMsg BC = BillsCardUI[i].Find("BookCard").GetComponent<CardMsg>();
+                if (prop.HandCard)
+                {
+                    HC.card = prop.HandCard;
+                    HC.gameObject.SetActive(true);
+                    InputCardMsg(HC.gameObject);
+                    type++;
+                }
+                else
+                {
+                    HC.card = null;
+                    HC.gameObject.SetActive(false);
+                }
+                if (prop.BookCard)
+                {
+                    BC.card = prop.BookCard;
+                    BC.gameObject.SetActive(true);
+                    InputCardMsg(BC.gameObject);
+                    type += 2;
+                }
+                else
+                {
+                    BC.card = null;
+                    BC.gameObject.SetActive(false);
+                }
+                if (type == 1)
+                {
+                    BillsText[i].Find("player").GetComponent<Text>().text =
+                        prop.Player.PlayerName + "希望";
+                    BillsText[i].Find("content").GetComponent<Text>().text =
+                        "添加此卡牌";
+                }
+                else if (type == 2)
+                {
+                    BillsText[i].Find("player").GetComponent<Text>().text =
+                        prop.Player.PlayerName + "希望删除此卡牌";
+                    BillsText[i].Find("content").GetComponent<Text>().text =
+                        "希望删除此卡牌";
+                }
+                else if (type == 3)
+                {
+                    BillsText[i].Find("player").GetComponent<Text>().text =
+                        prop.Player.PlayerName + "希望";
+                    BillsText[i].Find("content").GetComponent<Text>().text =
+                        "替换此卡牌到该卡牌的曾在的协议书上";
+                }
+                type = 0;
+                i++;
+            }
+        }
         #endregion
+        /// <summary>
+        /// 为卡牌填写属性信息
+        /// </summary>
+        /// <param name="C_obj">卡牌对象</param>
+        public void InputCardMsg(GameObject C_obj)
+        {
+            int i = 0;
+            foreach (var text in C_obj.GetComponentsInChildren<Text>())
+            {
+                int v = C_obj.GetComponent<CardMsg>().card.GetByNum(i);
+                if (v > 0) text.text = "+" + v;
+                else text.text = v.ToString();
+                i++;
+            }
+        }
 
         #region 拉拢模块
 
@@ -149,7 +243,10 @@ namespace Tomokin
             Player.GetMoney = -2;
             Net.SendActionAns(Player.PlayerName, 1);
         }
-
+        /// <summary>
+        /// 被其他玩家贿赂成功(监听贿赂同意的按钮)
+        /// </summary>
+        /// <param name="name">行贿人的名字</param>
         public void BeBribe(string name)
         {
             foreach (var pd in CilentManager.PDs)
@@ -169,10 +266,12 @@ namespace Tomokin
             num = (CilentManager.PlayerNum + num) % 3;
             Debug.Log(num);
             if (!(num < CilentManager.PDs.Length)) return;
+            //输出打印
             string msg = CilentManager.PlayerName + CilentManager.PlayerID +
                 "给" + CilentManager.PDs[num].PlayerName + "发送贿赂请求";
             Debug.Log(msg);
             FindObjectOfType<TextInputManager>().SendMsg(msg);
+
             //发送贿赂请求（NET）
             ActionData ad = new StepOneActionData(CilentManager.PlayerName + CilentManager.PlayerID,
                 1, "贿赂", CilentManager.PDs[num].PlayerName);
@@ -185,8 +284,17 @@ namespace Tomokin
         public void ReceivedBrideMsg(string name)
         {
             Debug.Log("弹出窗口");
-            //name删除ID
-            prepare.OnBribeMessageReceived(name);
+            int i = 0;
+            foreach (var pd in CilentManager.PDs)
+            {
+                if (pd.PlayerName == name)
+                {
+                    prepare.OnBribeMessageReceived(i);
+                    return;
+                }
+                i++;
+            }
+            Debug.Log("未找到name=" + name + "的玩家");
         }
 
         #endregion
@@ -222,14 +330,16 @@ namespace Tomokin
 
             C_obj.GetComponent<CardMsg>().card = C_msg;
             //C_obj.GetComponent<Image>().sprite = C_msg.icon;
-            int i = 0;
-            foreach (var text in C_obj.GetComponentsInChildren<Text>())
-            {
-                int v = C_obj.GetComponent<CardMsg>().card.GetByNum(i);
-                if (v > 0) text.text = "+" + v;
-                else text.text = v.ToString();
-                i++;
-            }
+
+            InputCardMsg(C_obj);
+            //int i = 0;
+            //foreach (var text in C_obj.GetComponentsInChildren<Text>())
+            //{
+            //    int v = C_obj.GetComponent<CardMsg>().card.GetByNum(i);
+            //    if (v > 0) text.text = "+" + v;
+            //    else text.text = v.ToString();
+            //    i++;
+            //}
 
         }
         /// <summary>
@@ -297,24 +407,12 @@ namespace Tomokin
         public void Roll()
         {
             Debug.Log("Rol Card");
+            UpdateUIMsg();
+            SendPlayerMsg();
             RollCards(HCM);
         }
         #endregion
 
-        #region 提交议案模块
-        //提交自己的议案
-        public void SendMyProposal(Proposal myProp)
-        {
-            string tip = "";    //添加替换删除
-            StepTwoActionData AD = new StepTwoActionData(CilentManager.PlayerName + CilentManager.PlayerID,
-                2, tip, myProp.HandCard.Get_Order, myProp.InBook, myProp.BookCard.Get_Order,
-                CilentManager.PlayerName);
-            Net.SendAction(AD);
-        }
-        //收集并排序议案
-
-
-        #endregion
 
         /// <summary>
         /// 向服务器发送需要投票的提案,上一个投票结束也会调用(最好是房主来操作)
@@ -324,8 +422,9 @@ namespace Tomokin
             Proposal prop = ProposalManager.PropsofthisTurn[n];
             string tip = "";    //添加替换删除
             tip = ProposalManager.GetPropType(prop);
+            //一个提案
             StepTwoActionData AD = new StepTwoActionData(CilentManager.PlayerName + CilentManager.PlayerID,
-                2, tip, 
+                2, tip,
                 prop.HandCard.Get_Order,
                 prop.InBook,
                 prop.BookCard.Get_Order,
@@ -333,41 +432,47 @@ namespace Tomokin
             ProposalManager.PropsofthisTurn.RemoveAt(n);
             Net.StartVote(AD, 0);
         }
-
+        //将客户端玩家信息上传服务器
         public void SendPlayerMsg()
         {
             Net.SynchronizeAssets(CilentManager.playerdata.GetMoney,
                 CilentManager.playerdata.GetChip);
         }
 
-        //玩家的信息更新
-        public void UpdatePlayerMsg()
+        //本地玩家的UI信息更新
+        public void UpdateUIMsg()
         {
-            Net.SynchronizeAssets(CilentManager.playerdata.GetMoney,
-                CilentManager.playerdata.GetChip);
+            CilentPlayer.Find("name").GetComponent<Text>().text = CilentManager.PlayerName;
+            CilentPlayer.Find("chip").GetComponent<Text>().text =
+                string.Format("{0}", CilentManager.playerdata.GetChip);
+            CilentPlayer.Find("gcoin").GetComponent<Text>().text =
+                string.Format("{0}", CilentManager.playerdata.GetMoney);
+
+            int n = CilentManager.PlayerNum;
+            Player1.Find("name").GetComponent<Text>().text =
+                CilentManager.PDs[(n + 1) % 3].PlayerName;
+            Player1.Find("chip").GetComponent<Text>().text =
+                string.Format("{0}", CilentManager.PDs[(n + 1) % 3].GetChip);
+
+            Player2.Find("name").GetComponent<Text>().text =
+                CilentManager.PDs[(n + 2) % 3].PlayerName;
+            Player2.Find("chip").GetComponent<Text>().text =
+                string.Format("{0}", CilentManager.PDs[(n + 2) % 3].GetChip);
+
         }
 
-        public void UpdateUI()
-        {
-            PlayerData pd = new PlayerData();
-            pd.chip = CilentManager.playerdata.GetChip;
-            pd.coin = CilentManager.playerdata.GetMoney;
-            pd.name = CilentManager.PlayerName;
-            //FindObjectOfType<PlayerInformation>().UpdatePlayerData(pd);
-        }
-
+        //投票(上传服务器)
         public void SendVote(float poll)
         {
             Net.ClientReturnVoteAns(poll, 0);
         }
-
+        //投票(转换票数)
         public void SendVote(bool agree)
         {
             if (agree) SendVote(1);
             else SendVote(-1);
         }
-
-
+        //投额外一票(转换票数)
         public void SendExvote(bool agree)
         {
             if (CilentManager.playerdata.ExVote)
@@ -411,6 +516,8 @@ namespace Tomokin
                     CilentManager.playerdata.GetChip = -2;
                     CilentManager.playerdata.ExVote = true;
                     //上传玩家信息
+                    UpdateUIMsg();
+                    SendPlayerMsg();
                 }
             }
         }
@@ -431,9 +538,7 @@ namespace Tomokin
             }
         }
 
-        /// <summary>
-        /// 打印提案
-        /// </summary>
+        // 打印提案
         public void Agree()
         {
             string str = ProposalManager.PrintProp();
@@ -443,19 +548,25 @@ namespace Tomokin
         }
 
         // Use this for initialization
-        void Start()
+        void OnEnable()
         {
             Instance = this;
             prepare = FindObjectOfType<PrepareStateEvent>();
             //订阅
+            //准备阶段
             prepare.onRollCard += Roll;   //监听换牌按钮
-            //prepare.bribeMessageSent += SendBrideMsg; //监听发送贿赂请求按钮
-            //prepare.approveBribe += BeBribe;
-            //prepare.rejectBribe += NoteBribe;
+            prepare.bribeMessageSent += SendBrideMsg; //监听发送贿赂请求按钮
+            prepare.approveBribe += BeBribe;    //接收贿赂
+            prepare.rejectBribe += NoteBribe;   //拒绝贿赂
+
+            //谈判阶段
             FindObjectOfType<NegociateState>().onAgreeBuyTicket += BuyExVote;
+
+            //投票阶段
             FindObjectOfType<VoteState>().onVoteSent += SendVote;
             FindObjectOfType<VoteState>().onUseTicket += SendExvote;
 
+            //阶段结束
             prepare.onRoundEnded += EndStage;
             FindObjectOfType<ProposalStateEvent>().onRoundEnded += EndStage;
             FindObjectOfType<NegociateState>().onRoundEnded += EndStage;

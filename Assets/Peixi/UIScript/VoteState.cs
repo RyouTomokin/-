@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Tomokin;
 
 namespace Peixi
 {
@@ -133,8 +134,14 @@ namespace Peixi
             //print("投下赞成票");
             if (onVoteSent != null)
             {
-                var m_playerInfomation = FindObjectOfType<PlayerInformation>();
-                if (m_playerInfomation.HaveExTicket)
+                //var m_playerInfomation = FindObjectOfType<PlayerInformation>();
+                //if (m_playerInfomation.HaveExTicket)
+                //{
+                //    useExTicketFrame.SetActive(true);
+                //}
+                //onVoteSent.Invoke(m_vote);
+                var pd = CilentManager.playerdata;
+                if (pd.ExVote)
                 {
                     useExTicketFrame.SetActive(true);
                 }
@@ -146,7 +153,9 @@ namespace Peixi
             print("使用额外一票");
             if (onUseTicket != null)
             {
-                onUseTicket.Invoke(m_useTicket);
+                if (CilentManager.playerdata.ExVote)
+                    onUseTicket.Invoke(m_useTicket);
+                else Debug.Log("没有额外一票");
             }
         }
         /// <summary>

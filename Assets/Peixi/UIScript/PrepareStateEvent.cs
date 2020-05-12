@@ -43,7 +43,7 @@ namespace Peixi
         /// <summary>
         /// 收到线上玩家的贿赂请求消息
         /// </summary>
-        public event Action<string> bribeMessageReceived;
+        public event Action<int> bribeMessageReceived;
         /// <summary>
         /// 向其他玩家发送贿赂请求
         /// 参数1：受贿人名字
@@ -53,14 +53,14 @@ namespace Peixi
         /// <summary>
         /// 收到贿赂请求处理结果
         /// </summary>
-        public event Action<string,bool> bribeRequestResultReceived;
+        public event Action<string, bool> bribeRequestResultReceived;
 
-        PlayerInformation info ;
+        //PlayerInformation info ;
         // Start is called before the first frame update
         void Start()
         {
             director = GetComponent<PlayableDirector>();
-            info = FindObjectOfType<PlayerInformation>();
+            //info = FindObjectOfType<PlayerInformation>();
             onRoundStarted += OnRoundStart;
             onRoundEnded += OnRoundEnd;
         }
@@ -94,10 +94,12 @@ namespace Peixi
             StartCoroutine(RoundInterval());
         }
         #region//Bribe
+        /// <summary>
+        /// 贿赂玩家(btn)
+        /// </summary>
         public void OnBribeButtonPressed()
         {
-            //int coin = Tomokin.CilentManager.playerdata.GetMoney;
-            int coin = 5;
+            int coin = Tomokin.CilentManager.playerdata.GetMoney;
             if (coin >= 2)
             {
                 //print("点击了贿赂按钮");
@@ -115,25 +117,24 @@ namespace Peixi
                 bribeWarnFrame.SetActive(true);
             }
         }
+        /// <summary>
+        /// PY交易(btn)
+        /// </summary>
+        /// <param name="playerNum">玩家序号</param>
         public void OnDealPlayerButtonPressed(int playerNum)
         {
-            inquireBribeFrame.SetActive(true);
+            //是否花费2GB贿赂的弹窗
+            //inquireBribeFrame.SetActive(true);
             dealOnlinePlayer1Button.SetActive(false);
             dealOnlinePlayer2Button.SetActive(false);
-            //bribeMessageSent.Invoke(playerNum);
-
-            string bribeTaker = info.Datas[playerNum].PlayerName;
-            string briber = info.Datas[0].PlayerName;
-            print(briber + "向" + bribeTaker + "发送贿赂请求");
             if (bribeMessageSent != null)
             {
-                bribeMessageSent.Invoke(bribeTaker, briber);
+                bribeMessageSent.Invoke(playerNum);
             }
             else
             {
                 Debug.LogWarning("bribeMessageSent没有订阅者");
             }
-           
         }
         public void OnConfirmBribeButtonPressed()
         {
@@ -142,41 +143,17 @@ namespace Peixi
             bribeButton.SetActive(true);
             //调用贿赂的底层逻辑（需要知道被贿赂的对象）
         }
-        //public void OnCancelBribeButtonPressed()
-        //{
-        //    print("cancel bribe button press");
-        //    inquireBribeFrame.SetActive(false);
-        //    bribeButton.SetActive(true);
-        //}
-        //public void ShutDownBribeWarnFrame()
-        //{
-        //    bribeWarnFrame.SetActive(false);
-        //}
         /// <summary>
         /// 服务器向本地玩家发送BribeMessage
         /// </summary>
-        /// <param name="name">发送者的名字</param>
-        public void OnBribeMessageReceived(string name)
+        /// <param name="n">发送者的序号</param>
+        public void OnBribeMessageReceived(int n)
         {
             if (bribeMessageReceived != null)
             {
-                bribeMessageReceived.Invoke(name);
+                bribeMessageReceived.Invoke(n);
             }
             //print("收到其他玩家的悄悄话");
-        }
-        /// <summary>
-        /// 服务器向本地玩家发送BribeMessage
-        /// </summary>
-        /// <param name="playerNumber">发送者的编号</param>
-        public void OnBribeMessageReceived(int playerNumber)
-        {
-            if (bribeMessageReceived != null)
-            {
-                if (playerNumber == 1)
-                {
-                   //需要一个字典来进行名字和编号的转换
-                }
-            }
         }
         public void InvokeApproveBribe(string name)
         {
@@ -197,34 +174,28 @@ namespace Peixi
         /// </summary>
         /// <param name="m_name">受贿人的名字</param>
         /// <param name="m_result">受贿结果</param>
-        public void InvokeBribeRequestResultReceived(string m_name,bool m_result)
+        public void InvokeBribeRequestResultReceived(string m_name, bool m_result)
         {
-            if (bribeRequestResultReceived != null)
+            bribeResultFrame.SetActive(true);
+            var content = bribeResultFrame.GetComponentInChildren<Text>();
+            if (m_result)
             {
-                bribeRequestResultReceived.Invoke(m_name, m_result);
-                bribeResultFrame.SetActive(true);
-                var content = bribeResultFrame.GetComponentInChildren<Text>();
-                if (m_result)
-                {
-                    content.text = m_name + "同意了你的请求";
-                }
-                else
-                {
-                    content.text = m_name + "拒绝了你的请求";
-                }
+                content.text = m_name + "同意了你的请求";
+            }
+            else
+            {
+                content.text = m_name + "拒绝了你的请求";
             }
         }
         #endregion
 
         #region//RollCard
         /// <summary>
-        /// 询问是否Rollcard
+        /// 询问是否Rollcard(btn)
         /// </summary>
         public void OnRollCardButtonPressed()
         {
-            //print("press roll card button");
             var chip = Tomokin.CilentManager.playerdata.GetChip;
-            //print(playerInformation.Chip);
             if (chip >= 2)
             {
                 rollCardButton.SetActive(false);
@@ -236,18 +207,19 @@ namespace Peixi
             }
         }
         /// <summary>
-        /// 确认Roll牌
+        /// 确认Roll牌(btn)
         /// </summary>
         public void OnConfirmRollCardButtonPressed()
         {
             print("confirm roll card");
-            rollCardButton.SetActive(true);
+            //rollCardButton.SetActive(true);
             inquireRollCardFrame.SetActive(false);
             director.playableAsset = timeLines[2];
             director.Play();
 
             if (onRollCard != null)
             {
+                CilentManager.playerdata.GetChip = -2;
                 onRollCard.Invoke();
             }
         }
@@ -264,11 +236,6 @@ namespace Peixi
             rollCardWarnFrame.SetActive(false);
         }
         #endregion
-
-        public void StartRound()
-        {
- 
-        }
 
         /// <summary>
         /// 时间到或者按下结束按钮

@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using Tomokin;
 
 namespace Peixi
 {
@@ -10,27 +12,31 @@ namespace Peixi
         Animation anim;
         string bribeTaker;
         public int playerNum;
+        public Text contet_txt;
         private void Start()
         {
             prepareState = FindObjectOfType<PrepareStateEvent>();
             anim = GetComponent<Animation>();
             Utility.AcitveAllChildren(transform,false);
             prepareState.bribeMessageReceived += OnBribeMessageReceived;
+            contet_txt = transform.Find("contet").GetComponent<Text>();
         }
-        void OnBribeMessageReceived(string player)
+        void OnBribeMessageReceived(int player)
         {
-
-            bribeTaker = player;
-            if (player== bribeTaker)
+            if (playerNum == player)
             {
+                
                 Utility.AcitveAllChildren(transform, true);
+                int n = CilentManager.PlayerNum + player;
+                bribeTaker = CilentManager.PDs[n].PlayerName;
+                Debug.Log(bribeTaker+ "希望花费2G币与您达成私下和解");
+                contet_txt.text = bribeTaker + "希望花费2G币与您达成私下和解。";
             }
             //anim.Play();
             //print("弹出悄悄话信息框");
         }
         public void OnApproveButtonPressed()
         {
-            string m_name = Tomokin.CilentManager.playerdata.PlayerName;
             prepareState.InvokeApproveBribe(bribeTaker);
             Utility.AcitveAllChildren(transform, false);
         }

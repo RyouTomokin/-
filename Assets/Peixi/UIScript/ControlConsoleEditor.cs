@@ -17,7 +17,7 @@ public class ControlConsoleEditor : Editor
     ControlConsole control;
     bool test;
     List<Bill> bills = new List<Bill>();
-    List<PlayerData> datas = new List<PlayerData>();
+    //List<PlayerData> datas = new List<PlayerData>();
     Vote result;
 
     PrepareStateEvent prepare;
@@ -29,7 +29,7 @@ public class ControlConsoleEditor : Editor
     {
         control = (ControlConsole)target;
         TestVote();
-        TestUpdatePlayerData();
+        //TestUpdatePlayerData();
         prepare = FindObjectOfType<PrepareStateEvent>();
         proposal = FindObjectOfType<ProposalStateEvent>();
         negociate = FindObjectOfType<NegociateState>();
@@ -55,16 +55,22 @@ public class ControlConsoleEditor : Editor
                 //{
                 //    Debug.Log(i + playerData[i].PlayerName + playerData[i].Number);
                 //}
-                FindObjectOfType<PlayerInformation>().UpdatePlayerData(playerData);
+                //FindObjectOfType<PlayerInformation>().UpdatePlayerData(playerData);
+                //更新玩家的数据显示
             }
             if (GUILayout.Button("开始准备阶段"))
             {
                 prepare.RoundStartInvoke();
             }
-            if (GUILayout.Button("在线玩家1发送悄悄话"))
+            if (GUILayout.Button("向本玩家发送悄悄话"))
             {
                 PrepareStateEvent prepare = FindObjectOfType<PrepareStateEvent>();
-                prepare.OnBribeMessageReceived("player1");
+                prepare.OnBribeMessageReceived(1);
+            }
+            if (GUILayout.Button("向本玩家发送悄悄话"))
+            {
+                PrepareStateEvent prepare = FindObjectOfType<PrepareStateEvent>();
+                prepare.OnBribeMessageReceived(2);
             }
             if (GUILayout.Button("收到在线玩家接受贿赂消息"))
             {
@@ -72,7 +78,7 @@ public class ControlConsoleEditor : Editor
             }
             if (GUILayout.Button("收到在线玩家拒绝贿赂消息"))
             {
-
+                FindObjectOfType<PrepareStateEvent>().InvokeBribeRequestResultReceived("player1", true);
             }
             if (GUILayout.Button("结束准备阶段"))
             {
@@ -80,7 +86,7 @@ public class ControlConsoleEditor : Editor
             }
         }
 
-       showProposalStateButton = EditorGUILayout.Foldout(showProposalStateButton, "提案阶段", true);
+        showProposalStateButton = EditorGUILayout.Foldout(showProposalStateButton, "提案阶段", true);
         if (showProposalStateButton)
         {
             if (GUILayout.Button("开始提案阶段"))
@@ -98,7 +104,7 @@ public class ControlConsoleEditor : Editor
         {
             if (GUILayout.Button("开始协商阶段"))
             {
-               negociate.StartRound(bills);
+                negociate.StartRound(bills);
             }
             if (GUILayout.Button("结束协商阶段"))
             {
@@ -162,27 +168,27 @@ public class ControlConsoleEditor : Editor
         bills.Insert(1, player2);
         bills.Insert(2, player3);
     }
-    void TestUpdatePlayerData()
-    {
-        PlayerData player1 = new PlayerData();
-        player1.name = "player1";
-        player1.chip = 5;
-        player1.coin = 5;
+    //void TestUpdatePlayerData()
+    //{
+    //    PlayerData player1 = new PlayerData();
+    //    player1.name = "player1";
+    //    player1.chip = 5;
+    //    player1.coin = 5;
 
-        PlayerData player2 = new PlayerData();
-        player2.name = "player2";
-        player2.chip = 5;
-        player2.coin = 5;
+    //    PlayerData player2 = new PlayerData();
+    //    player2.name = "player2";
+    //    player2.chip = 5;
+    //    player2.coin = 5;
 
-        PlayerData player3 = new PlayerData();
-        player3.name = "player3";
-        player3.chip = 0;
-        player3.coin = 0;
+    //    PlayerData player3 = new PlayerData();
+    //    player3.name = "player3";
+    //    player3.chip = 0;
+    //    player3.coin = 0;
 
-        datas.Add(player3);
-        datas.Add(player2);
-        datas.Add(player1);
-    }
+    //    datas.Add(player3);
+    //    datas.Add(player2);
+    //    datas.Add(player1);
+    //}
 
     Score[] TestScore()
     {

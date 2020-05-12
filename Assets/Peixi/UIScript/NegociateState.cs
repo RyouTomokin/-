@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
-using WebSocketSharp;
+//using WebSocketSharp;
 
 namespace Peixi
 {
@@ -15,6 +15,8 @@ namespace Peixi
         GameObject[] playerBills;
         [SerializeField]
         GameObject exTicketFrame;
+        [SerializeField]
+        GameObject Plane;
         /// <summary>
         /// 同意购买额外一票
         /// </summary>
@@ -31,6 +33,8 @@ namespace Peixi
             base.OnRoundStart();
             print("开始协商阶段");
             ticketFrame.SetActive(true);
+            exTicketFrame.SetActive(true);
+            Plane.SetActive(true);
         }
         protected override void OnRoundEnd()
         {
@@ -50,6 +54,7 @@ namespace Peixi
         public void StartRound(List<Bill> m_playerBills)
         {
             exTicketFrame.SetActive(true);
+            Plane.SetActive(true);
 
             for (int i = 0; i < playerBills.Length; i++)
             {
