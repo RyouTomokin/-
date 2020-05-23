@@ -24,6 +24,7 @@ namespace Peixi
         }
 
         RoundStateEnum roundState = RoundStateEnum.PrepareState;
+        public void InitRoundStateEnum() { roundState = RoundStateEnum.PrepareState; }
         // Start is called before the first frame update
 
         public RoundState round;
@@ -38,13 +39,18 @@ namespace Peixi
             FindObjectOfType<ProposalStateEvent>().onRoundStarted += OnRoundStart;
             FindObjectOfType<NegociateState>().onRoundStarted += OnRoundStart;
             //FindObjectOfType<VoteState>().onRoundStarted += OnRoundStart;
-            FindObjectOfType<AccountState>().onRoundStarted += OnRoundStart;
+            FindObjectOfType<VoteState>().onVoteRoundStart += OnRoundStart;
+            FindObjectOfType<AccountState>().onRoundStart += OnAccountStateStart;
 
         }
 
         void OnRoundStart()
         {
             //print("reset end button");
+            button.interactable = true;
+        }
+        void OnAccountStateStart(Score[] scores)
+        {
             button.interactable = true;
         }
         void ResetTimer()
@@ -71,15 +77,15 @@ namespace Peixi
                     roundState = RoundStateEnum.NegociateState;
                     break;
                 case RoundStateEnum.NegociateState:
-                    FindObjectOfType<VoteState>().RoundEndInvoke();
+                    FindObjectOfType<NegociateState>().RoundEndInvoke();
                     roundState = RoundStateEnum.VoteState;
                     break;
                 case RoundStateEnum.VoteState:
-                    FindObjectOfType<AccountState>().RoundEndInvoke();
+                    FindObjectOfType<VoteState>().RoundEndInvoke();
                     roundState = RoundStateEnum.AccountState;
                     break;
                 case RoundStateEnum.AccountState:
-                    FindObjectOfType<PrepareStateEvent>().RoundEndInvoke();
+                    FindObjectOfType<AccountState>().RoundEndInvoke();
                     roundState = RoundStateEnum.PrepareState;
                     break;
                 default:

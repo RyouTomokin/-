@@ -59,7 +59,7 @@ namespace Peixi
         /// <summary>
         /// 服务器接收使用额外一票事件
         /// </summary>
-        public event Action<bool> onUseTicket;
+        public event Action<float> onUseTicket;
         /// <summary>
         /// 服务器展示投票结果
         /// </summary>
@@ -72,7 +72,7 @@ namespace Peixi
         }
         private void Start()
         {
-            gameObject.SetActive(false);
+            //gameObject.SetActive(false);
 
             onRoundStarted += OnRoundStart;
             onRoundEnded += OnRoundEnd;
@@ -103,6 +103,7 @@ namespace Peixi
         public void StartVoteRound()
         {
             voteFrame.SetActive(true);
+            voteFrame.transform.Find("cancelButton").gameObject.SetActive(true);
             print("开始第" + voteRound + "轮投票");
             if (onVoteRoundStart != null)
             {
@@ -111,6 +112,17 @@ namespace Peixi
             else
             {
                 Debug.LogWarning("onVoteRoundStart is empty");
+            }
+
+            Proposal prop = CilentManager.PropNeedVote;
+            Debug.Log("len="+ CilentManager.playerdata.Bebribed.Count);
+            foreach (var item in CilentManager.playerdata.Bebribed)
+            {
+                Debug.Log("name=" + prop.Player.PlayerName + " Cilent=" + CilentManager.PlayerName);
+                if (item.PlayerName == prop.Player.PlayerName)
+                {
+                    voteFrame.transform.Find("cancelButton").gameObject.SetActive(false);
+                }
             }
         }
         /// <summary>
@@ -134,29 +146,45 @@ namespace Peixi
             //print("投下赞成票");
             if (onVoteSent != null)
             {
-                //var m_playerInfomation = FindObjectOfType<PlayerInformation>();
-                //if (m_playerInfomation.HaveExTicket)
-                //{
-                //    useExTicketFrame.SetActive(true);
-                //}
-                //onVoteSent.Invoke(m_vote);
+                onVoteSent.Invoke(m_vote);  //投普通票
                 var pd = CilentManager.playerdata;
                 if (pd.ExVote)
                 {
                     useExTicketFrame.SetActive(true);
                 }
-                onVoteSent.Invoke(m_vote);
+                else
+                {
+                    onUseTicket.Invoke(0);  //没有额外票
+                    Debug.Log("没有额外一票");
+                }
+                
             }      
         }
         public void InvokeUseTicket(bool m_useTicket)
         {
-            print("使用额外一票");
+            float v;
+            if (m_useTicket) v = 1.5f;
+            else v = -1.5f;
+            //print("使用额外一票");
             if (onUseTicket != null)
             {
                 if (CilentManager.playerdata.ExVote)
-                    onUseTicket.Invoke(m_useTicket);
-                else Debug.Log("没有额外一票");
+                {
+                    onUseTicket.Invoke(v);
+                    CilentManager.playerdata.ExVote = false;
+                }
+                else
+                {
+                    Debug.Log("没有额外一票");
+                    onUseTicket.Invoke(0);
+                } 
             }
+        }
+
+        public void InvokeUnuseTicket()
+        {
+            Debug.Log("不使用额外一票");
+            onUseTicket.Invoke(0);
         }
         /// <summary>
         /// 服务器显示投票结果
@@ -164,10 +192,15 @@ namespace Peixi
         /// <param name="m_vote"></param>
         public void InvokeShowVoteResult(Vote m_vote)
         {
+            voteResultFrame.SetActive(true);
             if (onShowVoteResult != null)
             {
                 onShowVoteResult.Invoke(m_vote);
             }
+        }
+        public void HideVoteResult()
+        {
+            voteResultFrame.SetActive(false);
         }
         public void InvokeVoteRoundEnd()
         {

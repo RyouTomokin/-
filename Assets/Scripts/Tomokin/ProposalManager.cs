@@ -21,13 +21,21 @@ namespace Tomokin
         {
             BookManager BM = BookManager.Instance;
             HandCardsManager HM = HandCardsManager.Instance;
-            if (prop.InBook == -1)
+            if (prop.InBook != -1)
             {
+                Debug.Log("删除卡牌");
                 BM.RemoveBook(prop.InBook);
             }
-            if (prop.InHand != null)
+            
+            if (prop.HandCard != null)
             {
-                HM.Add_Book(prop.InHand);
+                Debug.Log("添加卡牌");
+                HM.Add_Book(prop.HandCard);
+                Debug.Log(prop.Player.PlayerName + "  " + CilentManager.playerdata.PlayerName);
+                if (prop.Player == CilentManager.playerdata)
+                {
+                    HM.Remove_HandCard(prop.HandCard);
+                }
             }
         }
 
@@ -56,8 +64,10 @@ namespace Tomokin
             {
                 if (pd.PlayerName == name)
                 {
-                    Proposal prop = new Proposal(inbook, GameManager.Instance.CardsInLibarary[handcard],
-                                                    GameManager.Instance.CardsInLibarary[bookcard], pd);
+                    CardData hc = null, bc = null;
+                    if (handcard != -1) hc = GameManager.Instance.CardsInLibarary[handcard];
+                    if (bookcard != -1) bc = GameManager.Instance.CardsInLibarary[bookcard];
+                    Proposal prop = new Proposal(inbook, hc, bc, pd);
                     if (PropsofthisTurn == null)
                         PropsofthisTurn = new List<Proposal>();
                     PropsofthisTurn.Add(prop);
@@ -77,7 +87,7 @@ namespace Tomokin
         {
             if (prop.InHand == null)
             {
-                if (BookManager.GetBookByNum(prop.InBook).GetComponent<CardMsg>().card == prop.BookCard)
+                if (BookManager.Instance.GetBookByNum(prop.InBook).GetComponent<CardMsg>().card == prop.BookCard)
                     return true;
                 else return false;
             }
@@ -130,7 +140,9 @@ namespace Tomokin
             InHand = h;
             InBook = b;
             if (h != null) HandCard = h.GetComponent<CardMsg>().card;
-            if (b != -1) BookCard = BookManager.GetBookByNum(b).GetComponent<CardMsg>().card;
+            else HandCard = null;
+            if (b != -1) BookCard = BookManager.Instance.GetBookByNum(b).GetComponent<CardMsg>().card;
+            else BookCard = null;
             Player = CilentManager.playerdata;
         }
 

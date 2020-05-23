@@ -13,6 +13,7 @@ namespace Tomokin
         public static int PlayerNum;
         public static PlayerGameData[] PDs = new PlayerGameData[3];
         public static PlayerGameData playerdata;
+        public static Proposal PropNeedVote;
     }
 
     public static class HouseOwner
@@ -22,6 +23,7 @@ namespace Tomokin
         private static List<Proposal> PropOfTurn = new List<Proposal>();
         private static int Ready;
         private static int StageDone;
+        private static int VoteOver;
         private static float vote;
         private static float agree;
         private static float disagree;
@@ -52,6 +54,7 @@ namespace Tomokin
             Debug.Log("StageDone = " + StageDone);
             if (StageDone == 3)
             {
+                StageDone = 0;
                 AddJieDuan();
                 vote = 0;
                 disagree = 0;
@@ -59,12 +62,37 @@ namespace Tomokin
             }
         }
 
+        public static void InitVote()
+        { 
+            vote = 0;
+            VoteOver = 0;
+            disagree = 0;
+            agree = 0;
+        }
+        /// <summary>
+        /// 收到投票
+        /// </summary>
+        /// <param name="poll">票数</param>
         public static void ReciveVote(float poll)
         {
+            Debug.Log("Get投票" + poll + "  VoteOver=" + VoteOver);
             if (poll > 0) agree += poll;
             else if (poll < 0) disagree -= poll;
             else Debug.LogError("poll==0，有问题");
+
+            if (Mathf.Abs(poll) == 0.5f)
+            {
+                agree++;
+                disagree++;
+            } 
             vote += poll;
+            Debug.Log("agree = " + agree + " disagree = " + disagree);
+            VoteOver++;
+            
+            if (VoteOver >= 3)
+            {
+                GameManager.Instance.SendVoteResult();
+            }
         }
 
         //投票结果上传到服务器
@@ -80,10 +108,12 @@ namespace Tomokin
         public static List<Proposal> PropSort(List<Proposal> props)
         {
             Proposal temp;
-            for (int i = 0; i < 3; i++)
+            int n = props.Count;
+            for (int i = 0; i < n; i++)
             {
-                for (int j = i + 1; j < 3; j++)
+                for (int j = i + 1; j < n; j++)
                 {
+                    if (props[i].Player == null || props[j].Player == null) continue;
                     if (props[i].Player.GetScore > props[j].Player.GetScore)
                     {
                         temp = props[i];
@@ -108,6 +138,12 @@ namespace Tomokin
         private static void AddTurns()
         {
             Turns++;
+            Debug.Log("Turns = "+ Turns);
+            if (Turns == 3)
+            {
+                Debug.Log("游戏结束");
+            }
+
             if (Turns == 4)
             {
                 //锁定前两个协议书槽
@@ -129,9 +165,10 @@ namespace Tomokin
                 Stages = 1;
                 AddTurns();
             }
-            StageDone = 0;           
+            
             //单机测试
             //GameManager.Instance.StartStage();
+            Debug.Log("stages = " + Stages);
             Net.StartStep(Stages);
         }
         //返回一个时间倒计时

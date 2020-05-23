@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Tomokin;
 
 namespace Peixi
 {
@@ -22,12 +23,18 @@ namespace Peixi
         }
         void OnVoteRoundStart()
         {
-            List<Bill> bills = voteState.PlayerBills;
-            if (bills != null)
+            //List<Bill> bills = voteState.PlayerBills;
+            Proposal prop = CilentManager.PropNeedVote;
+            if (prop != null)
             {
                 Utility.AcitveAllChildren(transform);
-                billboard.text = "玩家" + bills[voteRound].name + "的提案是:";
-                content.text = bills[voteRound].action + bills[voteRound].card1;
+                string name = TomokinNet.OnlyName(prop.Player.PlayerName);
+                billboard.text = "玩家" + name + "的提案是:";
+                string tip;
+                if (prop.HandCard == null) tip = "删除";
+                else if (prop.BookCard == null) tip = "添加";
+                else tip = "替换";
+                content.text = tip + "卡牌";
                 voteRound++;
             }
             else

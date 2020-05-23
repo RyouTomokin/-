@@ -23,11 +23,10 @@ namespace Peixi
         }
         void OnBribeMessageReceived(int player)
         {
-            if (playerNum == player)
+            int n = (CilentManager.PlayerNum + playerNum) % 3;
+            if (n == player)
             {
-                
                 Utility.AcitveAllChildren(transform, true);
-                int n = CilentManager.PlayerNum + player;
                 bribeTaker = CilentManager.PDs[n].PlayerName;
                 Debug.Log(bribeTaker+ "希望花费2G币与您达成私下和解");
                 contet_txt.text = bribeTaker + "希望花费2G币与您达成私下和解。";

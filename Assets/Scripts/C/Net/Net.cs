@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -108,7 +108,7 @@ namespace C
         //发送玩家行为
         public static void SendAction(ActionData actionData)
         {
-            netManager.SendResponse(NetManager.MessageType.行为, "", JsonConvert.SerializeObject(actionData));
+            netManager.SendResponse(NetManager.MessageType.行为, "", JsonUtility.ToJson(actionData));
         }
 
         //发送玩家行为回复 tar_nickname回复目标昵称 0拒绝 1同意
@@ -126,12 +126,26 @@ namespace C
         //主机通知客户端 开始进行投票  stepTwoActionData 提案数据  isExtra 0表示不是额外一票 1表示是额外一票
         public static void StartVote(StepTwoActionData stepTwoActionData,int isExtra)
         {
-            netManager.SendResponse(NetManager.MessageType.开始投票, "",isExtra.ToString() + "@" + JsonConvert.SerializeObject(stepTwoActionData));
+            netManager.SendResponse(NetManager.MessageType.开始投票, "",isExtra.ToString() + "@" + JsonUtility.ToJson(stepTwoActionData));
+            if(isExtra == 0)
+                GetInterface().OnVote(stepTwoActionData, false);
+            else
+                GetInterface().OnVote(stepTwoActionData, true);
         }
 
-        //客户端返回 投票结果     isExtra 0表示不是额外一票 1表示是额外一票
+        //客户端返回 投票结果     isExtra 0表示不是额外一票 1表示是额外一票 
         public static void ClientReturnVoteAns(float poll,int isExtra)
-        {                               
+        {
+
+            if (netManager.IsHouseOwner())
+            {
+                if(isExtra == 0)
+                    GetInterface().OnVoteGet(poll, false);
+                else
+                    GetInterface().OnVoteGet(poll, true);
+                return;
+            }
+
             netManager.SendResponse(NetManager.MessageType.投票结果, "", poll.ToString() + "@" + isExtra.ToString());
         }
 

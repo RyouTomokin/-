@@ -26,18 +26,34 @@ namespace Tomokin
         public CardMsg[] CM;                                        //所有的卡牌信息类
         public Text OutPut;                                         //打印提案显示
 
+        public Sprite[] TypeIcons;
+        public static Sprite[] Icons;
+        public Sprite[] TeemIcons;
         private PrepareStateEvent prepare;
         public Transform[] BillsCardUI;
         public Transform[] BillsText;
         public Transform CilentPlayer;
         public Transform Player1, Player2;
 
+        private float vote;
+        private string BribeTarget;
+
         public void StartStage()
         {
-            //设定倒计时
-            //开启这回合的UI
+            //Debug.Log("三人准备好了，开始新的阶段");
+            if(Stages == 1)
+            {
+                Debug.Log("开始准备阶段");
+                PrepareStateEvent prepare = FindObjectOfType<PrepareStateEvent>();
+                prepare.RoundStartInvoke();
+            }
+            if (Stages == 2)
+            {
+                Debug.Log("开始提交阶段");
+            }
             if (Stages == 3)
             {
+                Debug.Log("开始协商阶段");
                 //提案排序
                 ProposalManager.PropsofthisTurn = HouseOwner.PropSort(ProposalManager.PropsofthisTurn);
                 //展示这些提案
@@ -46,23 +62,34 @@ namespace Tomokin
             }
             if (Stages == 4)
             {
+                Debug.Log("开始投票阶段");
                 List<Bill> BillList = new List<Bill>();
                 List<Proposal> props = ProposalManager.PropsofthisTurn;
                 string tip;
                 foreach (var prop in props)
                 {
                     tip = ProposalManager.GetPropType(prop);
-                    BillList.Add(new Bill(prop.Player.PlayerName, tip,
-                        prop.HandCard.Get_Order, prop.BookCard.Get_Order));
+                    int hc_id = -1, bc_id = -1;
+                    if (prop.HandCard != null) hc_id = prop.HandCard.Get_Order;
+                    if (prop.BookCard != null) bc_id = prop.BookCard.Get_Order;
+
+                    BillList.Add(new Bill(prop.Player.PlayerName, tip, hc_id, bc_id));
                 }
-                FindObjectOfType<VoteState>().RoundStartInvoke(BillList);
+                //FindObjectOfType<VoteState>().RoundStartInvoke(BillList);
                 if (CilentManager.playerdata.IsHouseOwner)
                 {
+                    HouseOwner.InitVote();  //初始化收到投票的数量
                     SendPropForVote(0);
                 }
             }
             if (Stages == 5)
             {
+                Debug.Log("结束阶段");
+                //删除这个回合的提案
+                ProposalManager.PropsofthisTurn.Clear();
+                //更新玩家信息
+                UpdatePlayerMsgFromBooks();
+
                 Score[] scores = new Score[3];
                 int i = 0;
                 foreach (var pd in CilentManager.PDs)
@@ -74,11 +101,28 @@ namespace Tomokin
                 FindObjectOfType<AccountState>().RoundStartInvoke(scores);
             }
         }
+
+        private void UpdatePlayerMsgFromBooks()
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                PlayerGameData pd = CilentManager.PDs[i];
+                foreach (var book in BookManager.Instance.BookCards)
+                {
+                    if (book.activeSelf)
+                    {
+                        pd.GetMoney = book.GetComponent<CardMsg>().card.GetByNum(i);
+                    }
+                }
+            }
+        }
+
         //倒计时结束或者操作结束时调用
         public void EndStage()
         {
             //单机测试
             //HouseOwner.AddJieDuan();
+            Debug.Log("阶段结束,上传服务器");
             Net.SendActionEndMessage();
         }
 
@@ -119,9 +163,19 @@ namespace Tomokin
         public void SendMyProposal(Proposal myProp)
         {
             string tip = "";    //添加替换删除
+            int hc_id = -1;
+            int bc_id = -1;
+            if (myProp.HandCard != null)
+                hc_id = myProp.HandCard.Get_Order;
+            if (myProp.BookCard != null)
+                bc_id = myProp.BookCard.Get_Order;
+            //本地添加提案
+            ProposalManager.GetPropFromNet(myProp.InBook, hc_id, bc_id,
+                CilentManager.PlayerName + CilentManager.PlayerID);
+            //上传服务器
             StepTwoActionData AD = new StepTwoActionData(CilentManager.PlayerName + CilentManager.PlayerID,
-                2, tip, myProp.HandCard.Get_Order, myProp.InBook, myProp.BookCard.Get_Order,
-                CilentManager.PlayerName);
+                2, tip, hc_id, myProp.InBook, bc_id, CilentManager.PlayerName + CilentManager.PlayerID);
+            Stages = 3;
             Net.SendAction(AD);
         }
         /// <summary>
@@ -189,7 +243,7 @@ namespace Tomokin
         /// 为卡牌填写属性信息
         /// </summary>
         /// <param name="C_obj">卡牌对象</param>
-        public void InputCardMsg(GameObject C_obj)
+        public static void InputCardMsg(GameObject C_obj)
         {
             int i = 0;
             foreach (var text in C_obj.GetComponentsInChildren<Text>())
@@ -199,6 +253,9 @@ namespace Tomokin
                 else text.text = v.ToString();
                 i++;
             }
+
+            C_obj.transform.Find("CardAnim").Find("type").GetComponent<Image>().sprite =
+                 Icons[C_obj.GetComponent<CardMsg>().card.GetPreference];
         }
 
         #region 拉拢模块
@@ -213,16 +270,20 @@ namespace Tomokin
         public void BribeSuccess(PlayerGameData Bebribe_Player)
         {
             Bebribe_Player.Bebribed.Add(CilentManager.playerdata);
-            Bebribe_Player.GetMoney = 2;
+            //Bebribe_Player.GetMoney = 2;
             CilentManager.playerdata.GetMoney = -2;
+            UpdateUIMsg();
         }
         //通过姓名来检索玩家(回调)
         public void BribeSuccess(string player_n)
         {
-            prepare.InvokeBribeRequestResultReceived(player_n, true);
+            if (player_n != CilentManager.PlayerName + CilentManager.PlayerID) return;
+
+            prepare.InvokeBribeRequestResultReceived(BribeTarget, true);
             foreach (var pd in CilentManager.PDs)
             {
-                if (player_n == pd.PlayerName)
+                string n = TomokinNet.OnlyName(pd.PlayerName);
+                if (BribeTarget == n)
                 {
                     BribeSuccess(pd);
                     return;
@@ -240,7 +301,9 @@ namespace Tomokin
         {
             CilentManager.playerdata.Bebribed.Add(Player);
             CilentManager.playerdata.GetMoney = 2;
-            Player.GetMoney = -2;
+            //Player.GetMoney = -2;
+            UpdateUIMsg();
+            SendPlayerMsg();
             Net.SendActionAns(Player.PlayerName, 1);
         }
         /// <summary>
@@ -267,8 +330,9 @@ namespace Tomokin
             Debug.Log(num);
             if (!(num < CilentManager.PDs.Length)) return;
             //输出打印
-            string msg = CilentManager.PlayerName + CilentManager.PlayerID +
-                "给" + CilentManager.PDs[num].PlayerName + "发送贿赂请求";
+            BribeTarget = TomokinNet.OnlyName(CilentManager.PDs[num].PlayerName);
+            string msg = CilentManager.PlayerName + "给" +
+                BribeTarget + "发送贿赂请求";
             Debug.Log(msg);
             FindObjectOfType<TextInputManager>().SendMsg(msg);
 
@@ -413,6 +477,30 @@ namespace Tomokin
         }
         #endregion
 
+        #region 投票模块
+
+        public void ADtoProp(StepTwoActionData AD)
+        {
+            //Debug.Log("AD.name = " + AD.owner_nickname);
+            foreach (var pd in CilentManager.PDs)
+            {
+                //Debug.Log("pd.name = " + pd.PlayerName);
+                if (pd.PlayerName == AD.owner_nickname)
+                {
+                    CardData hc = null;
+                    CardData bc = null;
+                    if (AD.hand_card != -1) hc = CardsInLibarary[AD.hand_card];
+                    if (AD.agreement_card != -1) bc = CardsInLibarary[AD.agreement_card];
+
+                    if (hc == null) Debug.Log("hc is null");
+                    if (bc == null) Debug.Log("bc is null");
+
+                    Proposal prop = new Proposal(AD.agreement_id, hc, bc, pd);
+                    CilentManager.PropNeedVote = prop;
+                    break;
+                }
+            }
+        }
 
         /// <summary>
         /// 向服务器发送需要投票的提案,上一个投票结束也会调用(最好是房主来操作)
@@ -423,18 +511,87 @@ namespace Tomokin
             string tip = "";    //添加替换删除
             tip = ProposalManager.GetPropType(prop);
             //一个提案
+            int hc_id = -1;
+            int bc_id = -1;
+            if (prop.HandCard != null) hc_id = prop.HandCard.Get_Order;
+            if (prop.BookCard != null) bc_id = prop.BookCard.Get_Order;
+
             StepTwoActionData AD = new StepTwoActionData(CilentManager.PlayerName + CilentManager.PlayerID,
-                2, tip,
-                prop.HandCard.Get_Order,
-                prop.InBook,
-                prop.BookCard.Get_Order,
-                prop.Player.PlayerName);
+                2, tip, hc_id, prop.InBook, bc_id, prop.Player.PlayerName);
             ProposalManager.PropsofthisTurn.RemoveAt(n);
+            Debug.Log("房主提交一个提案");
             Net.StartVote(AD, 0);
         }
+        //投票(转换票数)
+        public void SendVote(bool agree)
+        {
+            if (agree) vote = 1;
+            else vote = -1;
+        }
+        //投额外一票并上传服务器(转换票数)
+        public void SendExvote(float agree)
+        {
+            Debug.Log("额外一票为" + agree);
+            vote += agree;
+            Net.ClientReturnVoteAns(vote, 0);
+        }
+        /// <summary>
+        /// 上传投票结果到服务器
+        /// </summary>
+        public void SendVoteResult()
+        {
+            Debug.Log("将投票结果上传服务器");
+            float v, a, d;
+            bool vb;
+            v = HouseOwner.GetVote;
+            if (v > 0) vb = true;
+            else vb = false;
+            a = HouseOwner.GetAgree;
+            d = HouseOwner.GetDisagree;
+            Debug.Log(a +" "+  d);
+            Net.EndVote(vb, a, d);
+        }
+        /// <summary>
+        /// 显示投票结果
+        /// </summary>
+        /// <param name="agree"></param>
+        /// <param name="disagree"></param>
+        public void VoteEnd(float agree, float disagree)
+        {
+            //显示投票结果
+            Vote v = new Vote();
+            v.positiveVote = agree;
+            v.negativeVote = disagree;
+            Debug.Log("显示投票结果");
+            if (agree >= disagree) ProposalManager.AgreeProp(CilentManager.PropNeedVote);
+            FindObjectOfType<VoteState>().InvokeShowVoteResult(v);
+            HouseOwner.InitVote();//可有可无
+            Debug.Log("延时3秒后开始新的一轮");
+            Invoke("NewVoteTurn", 3f);
+        }
+
+        private void NewVoteTurn()
+        {
+            FindObjectOfType<VoteState>().HideVoteResult();
+            //(房主)如果还有提案没投票，开始新一轮投票
+            //FindObjectOfType<VoteState>().StartVoteRound();
+            Debug.Log("剩余提案的个数" + ProposalManager.PropsofthisTurn.Count);
+            if (ProposalManager.PropsofthisTurn.Count != 0)
+            {
+                if (CilentManager.playerdata.IsHouseOwner)
+                    SendPropForVote(0);
+            }
+            else
+            {
+                Debug.Log("所有提案都投票结束");
+            }
+        }
+        #endregion
+
         //将客户端玩家信息上传服务器
         public void SendPlayerMsg()
         {
+            Debug.Log("Update:M" + CilentManager.playerdata.GetMoney + "  C" + CilentManager.playerdata.GetChip);
             Net.SynchronizeAssets(CilentManager.playerdata.GetMoney,
                 CilentManager.playerdata.GetChip);
         }
@@ -449,61 +606,27 @@ namespace Tomokin
                 string.Format("{0}", CilentManager.playerdata.GetMoney);
 
             int n = CilentManager.PlayerNum;
+
+            CilentPlayer.Find("camp").GetComponent<Image>().sprite =
+                TeemIcons[CilentManager.PDs[n].Number];
+            Player1.Find("camp").GetComponent<Image>().sprite =
+                TeemIcons[CilentManager.PDs[(n + 1) % 3].Number];
+            Player2.Find("camp").GetComponent<Image>().sprite =
+                TeemIcons[CilentManager.PDs[(n + 2) % 3].Number];
+
             Player1.Find("name").GetComponent<Text>().text =
-                CilentManager.PDs[(n + 1) % 3].PlayerName;
+                TomokinNet.OnlyName(CilentManager.PDs[(n + 1) % 3].PlayerName);
             Player1.Find("chip").GetComponent<Text>().text =
                 string.Format("{0}", CilentManager.PDs[(n + 1) % 3].GetChip);
 
             Player2.Find("name").GetComponent<Text>().text =
-                CilentManager.PDs[(n + 2) % 3].PlayerName;
+                TomokinNet.OnlyName(CilentManager.PDs[(n + 2) % 3].PlayerName);
             Player2.Find("chip").GetComponent<Text>().text =
                 string.Format("{0}", CilentManager.PDs[(n + 2) % 3].GetChip);
 
         }
 
-        //投票(上传服务器)
-        public void SendVote(float poll)
-        {
-            Net.ClientReturnVoteAns(poll, 0);
-        }
-        //投票(转换票数)
-        public void SendVote(bool agree)
-        {
-            if (agree) SendVote(1);
-            else SendVote(-1);
-        }
-        //投额外一票(转换票数)
-        public void SendExvote(bool agree)
-        {
-            if (CilentManager.playerdata.ExVote)
-            {
-                if (agree) SendVote(1.5f);
-                else SendVote(-1.5f);
-                CilentManager.playerdata.ExVote = false;
-            }
-        }
-        /// <summary>
-        /// 上传投票结果到服务器
-        /// </summary>
-        public void SendVoteResult()
-        {
-            float v, a, d;
-            bool vb;
-            v = HouseOwner.GetVote;
-            if (v > 0) vb = true;
-            else vb = false;
-            a = HouseOwner.GetAgree;
-            d = HouseOwner.GetDisagree;
-            Net.EndVote(vb, a, d);
-        }
-
-        //房主统计票数
-
-        //提案通过，客户端更新协议书(和自己的手牌)
-
-
-
-        //开始某阶段
+        //提案通过，客户端更新协议书(和自己的手牌)!!!
 
 
         //购票减筹码（在之前要判断筹码）(监听)
@@ -519,22 +642,6 @@ namespace Tomokin
                     UpdateUIMsg();
                     SendPlayerMsg();
                 }
-            }
-        }
-
-        public void VoteEnd(float agree, float disagree)
-        {
-            //显示投票结果
-            Vote v = new Vote();
-            v.positiveVote = agree;
-            v.negativeVote = disagree;
-            FindObjectOfType<VoteState>().InvokeShowVoteResult(v);
-            //(房主)如果还有提案没投票，开始新一轮投票
-            if (CilentManager.playerdata.IsHouseOwner)
-            {
-                FindObjectOfType<VoteState>().StartVoteRound();
-                if (ProposalManager.PropsofthisTurn.Count == 0)
-                    SendPropForVote(0);
             }
         }
 
@@ -585,6 +692,7 @@ namespace Tomokin
                 item.SetActive(false);
                 //item.transform.parent.gameObject.SetActive(false);
             }
+            Icons = TypeIcons;
             //卡牌初始化
             int order = 0;
             foreach (CardData cil in CardsInLibarary)
