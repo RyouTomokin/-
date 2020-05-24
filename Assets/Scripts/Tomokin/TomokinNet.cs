@@ -176,7 +176,7 @@ namespace Tomokin
         public void OnActionEnd(string end_nickname)
         {
             Debug.Log(end_nickname + "回合结束");
-            FindObjectOfType<TextInputManager>().SendMsg(end_nickname+"OnActionEnd");
+            //FindObjectOfType<TextInputManager>().SendMsg(end_nickname+"OnActionEnd");
             //发送给房主
             HouseOwner.StageAdd();
         }

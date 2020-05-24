@@ -85,7 +85,6 @@ namespace Peixi
             rollCardButton.SetActive(true);
 
             //print("开始准备阶段");
-            FindObjectOfType<Timer>().InitRoundStateEnum();
             director.playableAsset = timeLines[0];
             director.Play();
         }

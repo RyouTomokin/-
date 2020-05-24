@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +14,9 @@ namespace Peixi
         int round = -1;
         int state = -1;
         string[] stateName = { "准备阶段", "提案阶段", "协商阶段", "投票阶段", "结算阶段" };
+
+        public event Action<int> RoundChange;
+
         public int Round
         {
             set
@@ -33,7 +37,7 @@ namespace Peixi
 
                 state = (state > 5) ? 0 : state;
                 stateText.text = stateName[state];
-
+                RoundChange.Invoke(state);
             }
             get { return state; }
         }

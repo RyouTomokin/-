@@ -9,6 +9,8 @@ namespace Tomokin
         private int[] RGB = new int[3];
         [SerializeField]
         private Preferences pref;
+        [SerializeField]
+        private string c_name;
         public enum Preferences
         {
             win_win,
@@ -44,6 +46,10 @@ namespace Tomokin
         {
             get { return order; }
             set { order = value; }
+        }
+        public string Get_CardName
+        {
+            get { return c_name; }
         }
 
         public bool Get_IsInLib { get => IsInLib; set => IsInLib = value; }

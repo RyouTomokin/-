@@ -120,7 +120,7 @@ namespace C
         //action完毕
         public static void SendActionEndMessage()
         {
-            //netManager.SendResponse(NetManager.MessageType.行为结束, "", "end");
+            netManager.SendResponse(NetManager.MessageType.行为结束, "", "end");
         }
 
         //主机通知客户端 开始进行投票  stepTwoActionData 提案数据  isExtra 0表示不是额外一票 1表示是额外一票

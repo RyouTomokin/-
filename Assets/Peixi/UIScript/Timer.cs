@@ -42,18 +42,6 @@ namespace Peixi
                 }
             }
         }
-        //public bool RunningState
-        //{
-        //    get { return runningState; }
-        //    set
-        //    {
-        //        if (value != runningState)
-        //        {
-        //            OnbuttonPressed();
-        //        }
-        //    }
-        //}
-
         public PrepareStateEvent prepare;
         public ProposalStateEvent proposal;
         public NegociateState negociate;
@@ -70,7 +58,10 @@ namespace Peixi
             prepare.onRoundStarted += StartRound;
             proposal.onRoundStarted += StartRound;
             negociate.onRoundStarted += StartRound;
-            vote.onVoteRoundStart += StartRound;
+            vote.onVoteRoundStart += () =>
+            {
+                button.interactable = false;
+            };
             account.onRoundStart += StartRound;
 
             StartRound();

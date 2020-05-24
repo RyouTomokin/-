@@ -5,7 +5,18 @@ using UnityEngine;
 using Peixi;
 using Tomokin;
 
-public class Test : MonoBehaviour
-{
 
+interface ITest
+{
+    void DoTest();
 }
+public class Test : MonoBehaviour, ITest
+{
+    public void DoTest()
+    {
+
+        print("do something");
+    }
+}
+
+

@@ -23,14 +23,8 @@ namespace Tomokin
             {
                 //obj.transform.parent.gameObject.GetComponent<Image>().sprite = card.icon;
                 //gameObject.GetComponent<Image>().sprite = card.icon;
-                int i = 0;
-                foreach (var text in gameObject.GetComponentsInChildren<Text>())
-                {
-                    int v = gameObject.GetComponent<CardMsg>().card.GetByNum(i);
-                    if (v > 0) text.text = "+" + v;
-                    else text.text = v.ToString();
-                    i++;
-                }
+                
+                GameManager.InputCardMsg(gameObject);
 
                 card.Get_IsInLib = false;
             }
@@ -40,7 +34,8 @@ namespace Tomokin
         {
             try
             {
-                GM.Show_Replace_Remove(obj);
+                if (GameManager.Stages == 2)
+                    GM.Show_Replace_Remove(obj);
             }
             catch (System.Exception)
             {
@@ -66,7 +61,7 @@ namespace Tomokin
                 //BM.RemoveBook(BM.Bereplace, true);    //删除被替换的协议书
                 //HM.Add_Book(gameObject, true);        //添加手牌到协议书
                 ProposalManager.AddProp(gameObject, BM.Bereplace_int);
-                FindObjectOfType<TextInputManager>().SendMsg(CilentManager.PlayerName + "添加替换协议的提案");
+                //FindObjectOfType<TextInputManager>().SendMsg(CilentManager.PlayerName + "添加替换协议的提案");
                 BM.isReplace = false;
             }
         }

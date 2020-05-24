@@ -24,7 +24,7 @@ namespace Tomokin
                 if (book == Books[i])
                 {
                     ProposalManager.AddProp(null, i);
-                    FindObjectOfType<TextInputManager>().SendMsg(CilentManager.PlayerName + "添加删除协议的提案");
+                    //FindObjectOfType<TextInputManager>().SendMsg(CilentManager.PlayerName + "添加删除协议的提案");
                     break;
                 }
             }
@@ -40,14 +40,8 @@ namespace Tomokin
             Books[pos].SetActive(true);
             Books[pos].GetComponent<CardMsg>().card = GM.CardsInLibarary[card];
             //Books[pos].GetComponent<Image>().sprite = GM.CardsInLibarary[card].icon;
-            int i = 0;
-            foreach (var text in BookCards[pos].GetComponentsInChildren<Text>())
-            {
-                int v = BookCards[pos].GetComponent<CardMsg>().card.GetByNum(i);
-                if (v > 0) text.text = "+" + v;
-                else text.text = v.ToString();
-                i++;
-            }
+            
+            GameManager.InputCardMsg(BookCards[pos]);
         }
         //通过协议书槽的序号找到协议书
         public GameObject GetBookByNum(int n)

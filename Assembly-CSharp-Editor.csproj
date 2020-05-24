@@ -73,6 +73,7 @@
     <Compile Include="Assets\Duy Assets\Hierarchy 2\Editor\OpenSettings.cs" />
     <Compile Include="Assets\Duy Assets\Hierarchy 2\Editor\SceneRenamePopup.cs" />
     <Compile Include="Assets\Duy Assets\Hierarchy 2\Editor\SelectionsRenamePopup.cs" />
+    <Compile Include="Assets\TutorialInfo\Scripts\Editor\ReadmeEditor.cs" />
     <Reference Include="UnityEditor.TestRunner">
       <HintPath>G:/NewGBT_Game/Library/ScriptAssemblies/UnityEditor.TestRunner.dll</HintPath>
     </Reference>
