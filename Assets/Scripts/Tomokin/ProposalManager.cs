@@ -30,12 +30,17 @@ namespace Tomokin
             if (prop.HandCard != null)
             {
                 Debug.Log("添加卡牌");
+                if (BookManager.IsBookFull())
+                {
+                    Debug.Log("协议书已满");
+                    return;
+                }
                 HM.Add_Book(prop.HandCard);
                 Debug.Log(prop.Player.PlayerName + "  " + CilentManager.playerdata.PlayerName);
-                if (prop.Player == CilentManager.playerdata)
-                {
-                    HM.Remove_HandCard(prop.HandCard);
-                }
+                //if (prop.Player == CilentManager.playerdata)
+                //{
+                //    HM.Remove_HandCard(prop.HandCard);
+                //}
             }
         }
 

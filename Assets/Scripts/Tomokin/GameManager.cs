@@ -44,6 +44,11 @@ namespace Tomokin
             if(Stages == 1)
             {
                 Debug.Log("开始准备阶段");
+
+                //清零
+                CilentManager.playerdata.Bebribed.Clear();
+                CilentManager.playerdata.ExVote = false;
+
                 PrepareStateEvent prepare = FindObjectOfType<PrepareStateEvent>();
                 prepare.RoundStartInvoke();
             }
@@ -88,7 +93,9 @@ namespace Tomokin
                 //删除这个回合的提案
                 ProposalManager.PropsofthisTurn.Clear();
                 //更新玩家信息
-                UpdatePlayerMsgFromBooks();
+                SendPlayerMsg();
+
+                Invoke("", 0.5f);
 
                 Score[] scores = new Score[3];
                 int i = 0;
@@ -104,6 +111,9 @@ namespace Tomokin
 
         private void UpdatePlayerMsgFromBooks()
         {
+            int[] NewChip = new int[3] { 0, 0, 0 };
+            int value = HCM.drop.value;
+
             for (int i = 0; i < 3; i++)
             {
                 PlayerGameData pd = CilentManager.PDs[i];
@@ -111,9 +121,44 @@ namespace Tomokin
                 {
                     if (book.activeSelf)
                     {
-                        pd.GetMoney = book.GetComponent<CardMsg>().card.GetByNum(i);
+                        NewChip[i] += book.GetComponent<CardMsg>().card.GetByNum(i);
+                        //pd.GetMoney = book.GetComponent<CardMsg>().card.GetByNum(i);
                     }
                 }
+                pd.SetChip = pd.GetChip + NewChip[i];
+            }
+            PlayerGameData c_pd = CilentManager.playerdata;
+            if (value == 0)
+            {
+                int max = Mathf.Max(NewChip);
+                if (NewChip[CilentManager.PlayerNum] == max)
+                {
+                    //c_pd.SetChip = c_pd.GetChip + 1;
+                    c_pd.GetMoney = 1;
+                }
+                else
+                {
+                    //c_pd.SetChip = c_pd.GetChip - 2;
+                    c_pd.GetMoney = -2;
+                }
+            }
+            else if (value == 1)
+            {
+                c_pd.GetMoney = NewChip[CilentManager.PlayerNum] / 2;
+            }
+            else if (value == 2)
+            {
+                int ww = 0, com = 0;
+                foreach (var book in BookManager.Instance.BookCards)
+                {
+                    if (book.activeSelf)
+                    {
+                        CardData cd = book.GetComponent<CardMsg>().card;
+                        if (cd.GetPreference == 0) ww++;
+                        else if (cd.GetPreference == 2) com++;
+                    }
+                }
+                c_pd.GetMoney = ww - com;
             }
         }
 
@@ -122,6 +167,11 @@ namespace Tomokin
         {
             //单机测试
             //HouseOwner.AddJieDuan();
+            if (Stages == 4)
+            {
+                UpdatePlayerMsgFromBooks();
+                UpdateUIMsg();
+            }
             Debug.Log("阶段结束,上传服务器");
             Net.SendActionEndMessage();
         }
@@ -248,6 +298,11 @@ namespace Tomokin
             int i = 0;
             foreach (var text in C_obj.GetComponentsInChildren<Text>())
             {
+                if (i >= 3)
+                {
+                    text.text = C_obj.GetComponent<CardMsg>().card.Get_CardName;
+                    break;
+                }
                 int v = C_obj.GetComponent<CardMsg>().card.GetByNum(i);
                 if (v > 0) text.text = "+" + v;
                 else text.text = v.ToString();
@@ -334,7 +389,7 @@ namespace Tomokin
             string msg = CilentManager.PlayerName + "给" +
                 BribeTarget + "发送贿赂请求";
             Debug.Log(msg);
-            FindObjectOfType<TextInputManager>().SendMsg(msg);
+            //FindObjectOfType<TextInputManager>().SendMsg(msg);
 
             //发送贿赂请求（NET）
             ActionData ad = new StepOneActionData(CilentManager.PlayerName + CilentManager.PlayerID,
@@ -634,9 +689,9 @@ namespace Tomokin
         {
             if (b)
             {
-                if (CilentManager.playerdata.GetChip >= 2)
+                if (CilentManager.playerdata.GetChip >= 3)
                 {
-                    CilentManager.playerdata.GetChip = -2;
+                    CilentManager.playerdata.GetChip = -3;
                     CilentManager.playerdata.ExVote = true;
                     //上传玩家信息
                     UpdateUIMsg();

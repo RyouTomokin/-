@@ -26,7 +26,7 @@ namespace Tomokin
 
         public PlayerGameData(string pn, int num, bool isowner)
         {
-            Money = 5; Chip = 2; ExVote = false;
+            Money = 4; Chip = 4; ExVote = false;
             PlayerName = pn;
             Number = num;
             IsHouseOwner = isowner;
@@ -39,10 +39,11 @@ namespace Tomokin
             get { return Money; }
             set
             {
-                if (Money + value >= 0)
-                    Money += value;
-                else
-                    TanChuang("钱袋不足");
+                Money += value;
+                //if (Money + value >= 0)
+                //    Money += value;
+                //else
+                //    TanChuang("钱袋不足");
             }
         }
         public bool IsMoneyEnough(int m)
@@ -57,10 +58,11 @@ namespace Tomokin
             get { return Chip; }
             set
             {
-                if (Chip + value >= 0)
-                    Chip += value;
-                else
-                    TanChuang("筹码不足");
+                Chip += value;
+                //if (Chip + value >= 0)
+                //    Chip += value;
+                //else
+                //    TanChuang("筹码不足");
 
             }
         }

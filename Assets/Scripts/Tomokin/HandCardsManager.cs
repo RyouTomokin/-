@@ -23,7 +23,8 @@ namespace Tomokin
         public void Add_Book_Prop(GameObject hand)
         {
             ProposalManager.AddProp(hand, -1);
-            FindObjectOfType<TextInputManager>().SendMsg(CilentManager.PlayerName + "添加添加协议的提案");
+            hand.SetActive(false);
+            //FindObjectOfType<TextInputManager>().SendMsg(CilentManager.PlayerName + "添加添加协议的提案");
         }
 
         /// <summary>

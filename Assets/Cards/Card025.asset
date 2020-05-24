@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RGB: 0000000001000000feffffff
   pref: 2
+  c_name: "\u6291\u5236\u77F3\u6CB9\u503E\u9500"
   icon: {fileID: 21300000, guid: 069ef26c1b2761340912907279a7eeed, type: 3}
