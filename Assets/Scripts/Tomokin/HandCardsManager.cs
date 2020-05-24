@@ -23,14 +23,16 @@ namespace Tomokin
         public void Add_Book_Prop(GameObject hand)
         {
             ProposalManager.AddProp(hand, -1);
+            FindObjectOfType<TextInputManager>().SendMsg(CilentManager.PlayerName + "添加添加协议的提案");
         }
 
         /// <summary>
         /// 添加协议书（按钮）查看是否有空协议书，有则添加手牌到协议书
         /// </summary>
         /// <param name="hand">手牌</param>
-        public void Add_Book(GameObject hand, bool isReplace)
+        public void Add_Book(CardData cd)
         {
+            Debug.Log("Add_Book");
             GameObject book = null;
             foreach (GameObject b in BookManager.Books)
             {
@@ -48,24 +50,30 @@ namespace Tomokin
             //找到协议书
             book.SetActive(true);
             //book.transform.SetAsLastSibling();
-            book.GetComponent<CardMsg>().card = hand.GetComponent<CardMsg>().card;
+            book.GetComponent<CardMsg>().card = cd;
             //book.GetComponent<Image>().sprite = book.GetComponent<CardMsg>().card.icon;
-            int i = 0;
-            foreach (var text in book.GetComponentsInChildren<Text>())
-            {
-                int v = book.GetComponent<CardMsg>().card.GetByNum(i);
-                if (v > 0) text.text = "+" + v;
-                else text.text = v.ToString();
-                i++;
-            }
 
-            hand.SetActive(false);
-            hand.GetComponent<CardMsg>().card = null;
-            hand.transform.SetAsLastSibling();
+            GameManager.InputCardMsg(book);
+
+            
         }
-        public void Add_Book(GameObject hand)
+
+        public void Remove_HandCard(CardData cd)
         {
-            Add_Book(hand, false);
+            foreach (var c in Cards)
+            {
+                CardData cd_in_c = c.GetComponent<CardMsg>().card;
+                Debug.Log("cd_in_c:" + cd_in_c.Get_Order);
+                if (cd_in_c == cd)
+                {
+                    GameObject hand = c;
+                    hand.SetActive(false);
+                    hand.GetComponent<CardMsg>().card = null;
+                    hand.transform.SetAsLastSibling();
+                    return;
+                }
+            }
+            Debug.Log("未找到手牌");
         }
 
         private void Start()

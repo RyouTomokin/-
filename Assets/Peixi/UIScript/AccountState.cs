@@ -67,6 +67,7 @@ namespace Peixi
         }
         public void RoundStartInvoke(Score[] m_score)
         {
+            accountFrame.SetActive(true);
             onRoundStart.Invoke(m_score);
         } 
     }

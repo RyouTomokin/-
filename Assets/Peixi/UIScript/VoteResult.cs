@@ -13,7 +13,7 @@ namespace Peixi
         Text positiveText;
         Text resultText;
         // Start is called before the first frame update
-        void Start()
+        void OnEnable()
         {
             voteState = FindObjectOfType<VoteState>();
             voteState.onShowVoteResult += ShowVoteResult;
@@ -24,6 +24,7 @@ namespace Peixi
         }
         void ShowVoteResult(Vote result)
         {
+            Debug.Log("ShowVoteResult");
             Utility.AcitveAllChildren(transform);
             //show result content
             negativeText.text = result.negativeVote.ToString();

@@ -11,7 +11,7 @@ namespace Peixi
         GameObject[] champions;
         AccountState accountState;
 
-        private void Awake()
+        private void OnEnable()
         {
             accountState = FindObjectOfType<AccountState>();
             accountState.onRoundStart += ShowPlayerScore;
@@ -31,7 +31,8 @@ namespace Peixi
             for (int i = 0; i < champions.Length; i++)
             {
                 Text[] texts = champions[i].GetComponentsInChildren<Text>();
-                texts[0].text = m_score[i].name;
+                string name = Tomokin.TomokinNet.OnlyName(m_score[i].name);
+                texts[0].text = name;
                 texts[1].text = m_score[i].chipGain.ToString();
                 texts[2].text = m_score[i].GcoinGain.ToString();
                 texts[3].text = m_score[i].score.ToString();

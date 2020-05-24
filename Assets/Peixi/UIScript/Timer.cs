@@ -105,11 +105,11 @@ namespace Peixi
                     roundState = RoundStateEnum.NegociateState;
                     break;
                 case RoundStateEnum.NegociateState:
-                    FindObjectOfType<VoteState>().RoundEndInvoke();
+                    FindObjectOfType<NegociateState>().RoundEndInvoke();
                     roundState = RoundStateEnum.VoteState;
                     break;
                 case RoundStateEnum.VoteState:
-                    FindObjectOfType<AccountState>().RoundEndInvoke();
+                    FindObjectOfType<VoteState>().RoundEndInvoke();
                     roundState = RoundStateEnum.AccountState;
                     break;
                 case RoundStateEnum.AccountState:

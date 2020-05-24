@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using C;
+using Peixi;
 
 namespace Tomokin
 {
@@ -56,7 +57,7 @@ namespace Tomokin
             Debug.Log("未进入房间");
         }
 
-        string OnlyName(string pn)
+        public static string OnlyName(string pn)
         {
             string n = "";
             foreach (var s in pn)
@@ -131,14 +132,17 @@ namespace Tomokin
                 Debug.Log(CilentManager.PlayerName + CilentManager.PlayerID);
                 if (AD.tar_player_nickname == CilentManager.PlayerName+CilentManager.PlayerID)
                 {
-                    Debug.Log("AD = " + AD.action_owner_nickname + "||" + CilentManager.PlayerName);
+                    //Debug.Log("AD = " + AD.action_owner_nickname + "||" + CilentManager.PlayerName);
                     FindObjectOfType<GameManager>().ReceivedBrideMsg(AD.action_owner_nickname);
                 }
             }
             else if (step == 2) //收到提案
             {
                 StepTwoActionData AD = (StepTwoActionData)actionData;
-                ProposalManager.GetPropFromNet(0, AD.hand_card, AD.agreement_id, AD.owner_nickname);
+
+                Debug.Log("收到的hc_id = " + AD.hand_card + " bc_id = " + AD.agreement_card);
+                ProposalManager.GetPropFromNet(AD.agreement_id, AD.hand_card, AD.agreement_card, AD.owner_nickname);
+                Debug.Log("收到" + AD.owner_nickname + "的提案");
             }
             else if (step == 3)
             {
@@ -172,7 +176,7 @@ namespace Tomokin
         public void OnActionEnd(string end_nickname)
         {
             Debug.Log(end_nickname + "回合结束");
-            FindObjectOfType<TextInputManager>().SendMsg("OnActionEnd");
+            FindObjectOfType<TextInputManager>().SendMsg(end_nickname+"OnActionEnd");
             //发送给房主
             HouseOwner.StageAdd();
         }
@@ -189,31 +193,33 @@ namespace Tomokin
 
         public void OnVote(StepTwoActionData stepTwoActionData, bool isExtra)
         {
-            if (!isExtra)
-            {
-                //所以玩家得到此提案，并对它投票
-            }
+            Debug.Log("收到房主发的提案");
+            GameManager.Instance.ADtoProp(stepTwoActionData);
+            FindObjectOfType<VoteState>().StartVoteRound();
         }
 
         public void OnVoteGet(float poll, bool isExtra)
         {
-            if (isExtra) HouseOwner.ReciveVote(poll);
+            Debug.Log("房主收到投票反馈");
+            HouseOwner.ReciveVote(poll);
         }
 
         public void OnVoteEnd(bool isAgree, float agree, float disagree)
         {
+            Debug.Log("玩家收到投票结果");
             FindObjectOfType<GameManager>().VoteEnd(agree, disagree);
         }
 
         public void OnSynchronizeAssets(string owner_nickname, int glod, int chip)
         {
+            Debug.Log("Everyone Update:" + owner_nickname);
             foreach (var pd in CilentManager.PDs)
             {
                 if (pd.PlayerName == owner_nickname)
                 {
                     pd.SetChip = chip;
                     pd.SetMoney = glod;
-                    FindObjectOfType<TextInputManager>().SendMsg("同步"+owner_nickname+"的信息");
+                    //FindObjectOfType<TextInputManager>().SendMsg("同步"+owner_nickname+"的信息");
                     FindObjectOfType<GameManager>().UpdateUIMsg();
                 }
             }

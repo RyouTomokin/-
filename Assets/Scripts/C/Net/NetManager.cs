@@ -4,7 +4,6 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
-using Newtonsoft.Json;
 
 namespace C
 {
@@ -284,7 +283,24 @@ namespace C
                     Debug.Log("接收到行为数据：" + chat_s);
                     string[] ss = ((string)chat_s).Split('@');
                     //if(ss[0] == PhotonNetwork.LocalPlayer.NickName)
-                    Net.GetInterface().OnOtherPlayerActionGet((ActionData)JsonConvert.DeserializeObject(ss[1]));
+                    //Net.GetInterface().OnOtherPlayerActionGet((ActionData)JsonUtility.FromJson(ss[1],typeof(ActionData)));
+                    ActionData a = (ActionData)JsonUtility.FromJson(ss[1], typeof(ActionData));
+                    if(a.step_num == 1)
+                    {
+                        Net.GetInterface().OnOtherPlayerActionGet((StepOneActionData)JsonUtility.FromJson(ss[1], typeof(StepOneActionData)));
+                    }
+                    if (a.step_num == 2)
+                    {
+                        Net.GetInterface().OnOtherPlayerActionGet((StepTwoActionData)JsonUtility.FromJson(ss[1], typeof(StepTwoActionData)));
+                    }
+                    if (a.step_num == 3)
+                    {
+                        Net.GetInterface().OnOtherPlayerActionGet((StepThreeActionData)JsonUtility.FromJson(ss[1], typeof(StepThreeActionData)));
+                    }
+                    if (a.step_num == 4)
+                    {
+                        Net.GetInterface().OnOtherPlayerActionGet((StepForthActionData)JsonUtility.FromJson(ss[1], typeof(StepForthActionData)));
+                    }
                 }
             }
             if(photonEvent.Code == 4)
@@ -327,15 +343,16 @@ namespace C
                     {
                         Debug.Log("接收投票开始消息：" + (string)chat_s);
                         string[] ss = ((string)chat_s).Split('@');
+                        Debug.Log("test：" + ss[1]);
                         if(int.Parse(ss[0]) == 0)
                         {
                             //非额外一票
-                            Net.GetInterface().OnVote((StepTwoActionData)JsonConvert.DeserializeObject((string)chat_s),false);
+                            Net.GetInterface().OnVote((StepTwoActionData)JsonUtility.FromJson(ss[1],typeof(StepTwoActionData)),false);
                         }
                         else
                         {
                             //额外一票
-                            Net.GetInterface().OnVote((StepTwoActionData)JsonConvert.DeserializeObject((string)chat_s), true);
+                            Net.GetInterface().OnVote((StepTwoActionData)JsonUtility.FromJson(ss[1], typeof(StepTwoActionData)), true);
                         }
                        // Net.GetInterface().OnVote((StepTwoActionData)JsonConvert.DeserializeObject((string)chat_s));
                     }
@@ -399,7 +416,7 @@ namespace C
                     
                 }
             }
-            if (photonEvent.Code == 10)
+            if (photonEvent.Code == 11)
             {
                 object chat_s;
                 if (!IsHouseOwner()) return;
@@ -410,7 +427,7 @@ namespace C
 
                 }
             }
-            if(photonEvent.Code == 11)
+            if(photonEvent.Code == 12)
             {
                 object chat_s;
                 if (photonEvent.Parameters.TryGetValue(245, out chat_s))
@@ -421,7 +438,7 @@ namespace C
 
                 }
             }
-            if (photonEvent.Code == 12)
+            if (photonEvent.Code == 13)
             {
                 object chat_s;
                 if (photonEvent.Parameters.TryGetValue(245, out chat_s))
@@ -440,7 +457,7 @@ namespace C
 
 
         //判断是否是房主
-        private bool IsHouseOwner()
+        public bool IsHouseOwner()
         {
             Room room = PhotonNetwork.CurrentRoom;
             return room.masterClientId == PhotonNetwork.LocalPlayer.ActorNumber ? true : false;

@@ -94,9 +94,9 @@ namespace Tomokin
             GM.Roll();
 
             //进入准备阶段
-            PrepareStateEvent prepare = FindObjectOfType<PrepareStateEvent>();
-            Debug.Log(prepare);
-            prepare.RoundStartInvoke();
+            //PrepareStateEvent prepare = FindObjectOfType<PrepareStateEvent>();
+            //Debug.Log(prepare);
+            //prepare.RoundStartInvoke();
             this.gameObject.SetActive(false);
         }
     }

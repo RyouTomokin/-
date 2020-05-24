@@ -13,7 +13,7 @@ namespace Tomokin
         private BookManager BM;
         private HandCardsManager HM;
 
-        public GameObject obj;  //手牌的菜单栏
+        public GameObject obj = null;  //手牌的菜单栏
         public CardData card;
 
         private void Start()
@@ -38,14 +38,24 @@ namespace Tomokin
         //显示协议书的菜单
         public void Show()
         {
-            GM.Show_Replace_Remove(obj);
+            try
+            {
+                GM.Show_Replace_Remove(obj);
+            }
+            catch (System.Exception)
+            {
+                Debug.Log("此协议书槽没有协议书");
+            }
         }
         //显示手牌的菜单（若为替换模式，则将手牌添加到协议书）
         public void ShowAdd()
         {
             //不是替换模式则显示菜单栏
             if (!BM.isReplace)
-                GM.Show_Add(obj);
+            {
+                if (GameManager.Stages == 2)
+                    GM.Show_Add(obj);
+            }
             else
             {
                 //传递数据
@@ -56,6 +66,7 @@ namespace Tomokin
                 //BM.RemoveBook(BM.Bereplace, true);    //删除被替换的协议书
                 //HM.Add_Book(gameObject, true);        //添加手牌到协议书
                 ProposalManager.AddProp(gameObject, BM.Bereplace_int);
+                FindObjectOfType<TextInputManager>().SendMsg(CilentManager.PlayerName + "添加替换协议的提案");
                 BM.isReplace = false;
             }
         }

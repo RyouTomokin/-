@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Tomokin;
 
 namespace Peixi
 {
@@ -11,7 +12,8 @@ namespace Peixi
         GameObject[] cardStyle = new GameObject[3];
 
         int voteRound = 0;
-        private void Start()
+
+        private void OnEnable()
         {
             voteState = FindObjectOfType<VoteState>();
             voteState.onVoteRoundStart += OnVoteRoundStart;
@@ -29,21 +31,27 @@ namespace Peixi
 
         void OnVoteRoundStart()
         {
-            List<Bill> bills = voteState.PlayerBills;
-            string action = bills[voteRound].action;
-            if (action == "Add")
+            //Debug.Log("输入卡牌信息");
+            Proposal prop = CilentManager.PropNeedVote;
+            if (prop.HandCard != null)
             {
-                ShowCardStyle(2);
+                //Debug.Log("手牌信息");
+                cardStyle[0].SetActive(true);
+                cardStyle[0].GetComponent<CardMsg>().card = prop.HandCard;
+                GameObject CardAnim = cardStyle[0].transform.Find("CardAnim").gameObject;
+                GameManager.InputCardMsg(cardStyle[0]);
             }
-            else if (action == "Delete")
+            else cardStyle[0].SetActive(false);
+
+            if (prop.BookCard != null)
             {
-                ShowCardStyle(1);
+                //Debug.Log("协议书信息");
+                cardStyle[1].SetActive(true);
+                cardStyle[1].GetComponent<CardMsg>().card = prop.BookCard;
+                GameObject CardAnim = cardStyle[1].transform.Find("CardAnim").gameObject;
+                GameManager.InputCardMsg(cardStyle[1]);
             }
-            else if (action == "Replace")
-            {
-                ShowCardStyle(0);
-            }
-            voteRound++;
+            else cardStyle[1].SetActive(false);
         }
 
         void OnVoteRoundEnd()

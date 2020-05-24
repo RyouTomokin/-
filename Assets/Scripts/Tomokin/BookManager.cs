@@ -22,7 +22,11 @@ namespace Tomokin
             for (int i = 0; i < 6; i++)
             {
                 if (book == Books[i])
+                {
                     ProposalManager.AddProp(null, i);
+                    FindObjectOfType<TextInputManager>().SendMsg(CilentManager.PlayerName + "添加删除协议的提案");
+                    break;
+                }
             }
         }
         /// <summary>
@@ -43,12 +47,14 @@ namespace Tomokin
                 if (v > 0) text.text = "+" + v;
                 else text.text = v.ToString();
                 i++;
-            } 
+            }
         }
         //通过协议书槽的序号找到协议书
-        public static GameObject GetBookByNum(int n)
+        public GameObject GetBookByNum(int n)
         {
-            if (n < Books.Length)
+            Debug.Log("n = " + n);
+            Books = BookCards;
+            if (n < Books.Length && n >= 0)
                 return Books[n];
             else return null;
         }
@@ -89,6 +95,7 @@ namespace Tomokin
         /// <param name="obj">协议书对象</param>
         public void RemoveBook(GameObject obj, bool isReplace)
         {
+            if (obj == null) return;
             obj.SetActive(false);
             obj.GetComponent<CardMsg>().card = null;
         }
@@ -108,10 +115,11 @@ namespace Tomokin
         {
             Bereplace = obj;
             Bereplace_int = GetNumByBook(obj);
+            Debug.Log("替换模式启动");
             isReplace = true;
         }
 
-        private void Start()
+        private void OnEnable()
         {
             Instance = this;
             GM = GameManager.Instance;
@@ -123,7 +131,7 @@ namespace Tomokin
                     UnlockedBooks.Add(Books[i]);
                 }
             }
-            
+
         }
     }
 }
