@@ -7,11 +7,12 @@ namespace Peixi
 {
     public class Timer : MonoBehaviour
     {
-        Text timerNumber;
+        Text timeText;
         Button button;
         Animation anim;
         public int duration = 60;
         int time;
+        bool runningState = false;
         public PlayableDirector directer;
 
         private enum RoundStateEnum
@@ -24,42 +25,75 @@ namespace Peixi
         }
 
         RoundStateEnum roundState = RoundStateEnum.PrepareState;
-        // Start is called before the first frame update
 
-        public RoundState round;
+        public int Time
+        {
+            get { return time;}
+            set
+            {
+                if (value != time)
+                {
+                    time = value;
+                    timeText.text = time.ToString();
+                    if (time == 0)
+                    {
+                        OnbuttonPressed();
+                    }
+                }
+            }
+        }
+        //public bool RunningState
+        //{
+        //    get { return runningState; }
+        //    set
+        //    {
+        //        if (value != runningState)
+        //        {
+        //            OnbuttonPressed();
+        //        }
+        //    }
+        //}
+
+        public PrepareStateEvent prepare;
+        public ProposalStateEvent proposal;
+        public NegociateState negociate;
+        public VoteState vote;
+        public AccountState account;
+        // Start is called before the first frame update
+        //public RoundState round;
         void Start()
         {
-            timerNumber = GetComponentInChildren<Text>();
+            timeText = GetComponentInChildren<Text>();
             button = GetComponent<Button>();
             anim = GetComponent<Animation>();
 
+            prepare.onRoundStarted += StartRound;
+            proposal.onRoundStarted += StartRound;
+            negociate.onRoundStarted += StartRound;
+            vote.onVoteRoundStart += StartRound;
+            account.onRoundStart += StartRound;
 
-            FindObjectOfType<PrepareStateEvent>().onRoundStarted += OnRoundStart;
-            FindObjectOfType<ProposalStateEvent>().onRoundStarted += OnRoundStart;
-            FindObjectOfType<NegociateState>().onRoundStarted += OnRoundStart;
-            //FindObjectOfType<VoteState>().onRoundStarted += OnRoundStart;
-            FindObjectOfType<AccountState>().onRoundStarted += OnRoundStart;
-
+            StartRound();
         }
-
-        void OnRoundStart()
+        void StartRound()
         {
-            //print("reset end button");
-            button.interactable = true;
-        }
-        void ResetTimer()
-        {
-            time = duration;
             button.interactable = true;
             StartCoroutine(TimeCountDown());
+            Time = duration;
         }
+        void StartRound(Score[] scores)
+        {
+            roundState = RoundStateEnum.AccountState;
+            StartRound();
+        }
+        /// <summary>
+        /// End time count down 
+        /// </summary>
         public void OnbuttonPressed()
         {
-            //print("End button pressed");
             button.interactable = false;
-            //anim.Play();
-            //button.interactable = false;
-            //timerNumber.text = "00";
+            StopAllCoroutines();
+            Time = 0;
             switch (roundState)
             {
                 case RoundStateEnum.PrepareState:
@@ -79,7 +113,7 @@ namespace Peixi
                     roundState = RoundStateEnum.AccountState;
                     break;
                 case RoundStateEnum.AccountState:
-                    FindObjectOfType<PrepareStateEvent>().RoundEndInvoke();
+                    account.RoundEndInvoke();
                     roundState = RoundStateEnum.PrepareState;
                     break;
                 default:
@@ -88,14 +122,9 @@ namespace Peixi
         }
         IEnumerator TimeCountDown()
         {
-            timerNumber.text = time.ToString();
             yield return new WaitForSeconds(1);
-            time -= 1;
-            if (time <= 0)
-            {
-                OnbuttonPressed();
-            }
-            else
+            Time -= 1;
+            if (Time>0)
             {
                 StartCoroutine(TimeCountDown());
             }

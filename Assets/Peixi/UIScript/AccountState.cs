@@ -53,11 +53,11 @@ namespace Peixi
         protected override void OnRoundStart()
         {
             print("开始结算阶段");
+            accountFrame.SetActive(true);
         }
         protected override void OnRoundEnd()
         {
-            base.OnRoundEnd();
-            //print("结束结算阶段，等待其他玩家");
+            print("结束结算阶段，等待其他玩家");
             accountFrame.SetActive(false);
         }
         IEnumerator RoundInterval()
@@ -68,7 +68,7 @@ namespace Peixi
         public void RoundStartInvoke(Score[] m_score)
         {
             onRoundStart.Invoke(m_score);
-        }
+        } 
     }
 }
 

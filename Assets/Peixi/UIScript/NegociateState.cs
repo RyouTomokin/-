@@ -45,7 +45,6 @@ namespace Peixi
             {
                 item.SetActive(false);
             }
-            //StartCoroutine(RoundInterval());
         }
         /// <summary>
         /// 服务器开始提案阶段

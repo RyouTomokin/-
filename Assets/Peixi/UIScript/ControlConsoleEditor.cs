@@ -168,28 +168,7 @@ public class ControlConsoleEditor : Editor
         bills.Insert(1, player2);
         bills.Insert(2, player3);
     }
-    //void TestUpdatePlayerData()
-    //{
-    //    PlayerData player1 = new PlayerData();
-    //    player1.name = "player1";
-    //    player1.chip = 5;
-    //    player1.coin = 5;
-
-    //    PlayerData player2 = new PlayerData();
-    //    player2.name = "player2";
-    //    player2.chip = 5;
-    //    player2.coin = 5;
-
-    //    PlayerData player3 = new PlayerData();
-    //    player3.name = "player3";
-    //    player3.chip = 0;
-    //    player3.coin = 0;
-
-    //    datas.Add(player3);
-    //    datas.Add(player2);
-    //    datas.Add(player1);
-    //}
-
+   
     Score[] TestScore()
     {
         Score[] m_score = new Score[3];
